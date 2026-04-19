@@ -490,7 +490,7 @@
             let html = `
                 <div class="optimization-header">
                     <h4>✨ 针对【${selectedJob ? selectedJob.company + ' - ' + selectedJob.name : '所选岗位'}】的优化建议</h4>
-                    <ul class="overall-tips">${jobTips.map(tip => `<li>${tip}</li>`).join('')}</ul>
+                    <ul class="overall-tips">${jobTips && jobTips.length > 0 ? jobTips.map(tip => `<li>${tip}</li>`).join('') : '<li>请先选择目标岗位，系统将生成优化建议</li>'}</ul>
                 </div>
                 <div class="editor-section">
                     <h4>基本信息</h4>
@@ -505,7 +505,7 @@
                 const expTips = getExpOptimizationTips(exp.company);
                 html += `
                     <div class="exp-editor" id="exp_${i}">
-                        <div class="exp-tips-banner"><span class="exp-tips-label">💡 优化建议：</span><span class="exp-tips-content">${expTips.length > 0 ? expTips.join(' | ') : '暂无特定建议'}</span></div>
+                        <div class="exp-tips-banner"><span class="exp-tips-label">💡 优化建议：</span><span class="exp-tips-content">${expTips && expTips.length > 0 ? expTips.join(' | ') : '暂无特定建议'}</span></div>
                         <div class="exp-actions">
                             <button class="btn-move" onclick="moveExperience(${i}, -1)" title="上移" ${i === 0 ? 'disabled' : ''}>⬆️</button>
                             <button class="btn-move" onclick="moveExperience(${i}, 1)" title="下移" ${i === editedResume.experience.length - 1 ? 'disabled' : ''}>⬇️</button>
@@ -543,7 +543,7 @@
                 `;
             });
 
-            html += `</div><div class="editor-section"><h4>核心技能 <span class="keyword-hint">建议添加：${keywords.slice(0, 3).join(', ')}</span></h4><div class="edit-group"><label>技能（逗号分隔）：</label><input type="text" id="edit_skills" value="${editedResume.skills.join(', ')}" onchange="hasUnsavedChanges=true"></div></div>`;
+            html += `</div><div class="editor-section"><h4>核心技能 <span class="keyword-hint">建议添加：${selectedJob ? (selectedJob.skills || 'AI产品经理, 数据分析') : 'AI产品经理, 数据分析'}</span></h4><div class="edit-group"><label>技能（逗号分隔）：</label><input type="text" id="edit_skills" value="${editedResume.skills.join(', ')}" onchange="hasUnsavedChanges=true"></div></div>`;
             editor.innerHTML = html;
             hasUnsavedChanges = false;
         }
