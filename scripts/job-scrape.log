@@ -2,3 +2,11 @@
 Checking opencli availability...
 Attempting to scrape jobs from Boss直聘...
 Scraping completed, parsing results...
+[main 8346610] Daily job data update: 2026-04-19 22:17
+ 3 files changed, 8 insertions(+)
+ create mode 100644 scripts/job-scrape.log
+ create mode 100644 scripts/job_data.json
+ create mode 100644 scripts/parsed_jobs.js
+To github.com:zhengrui0207-png/job-recommendation.git
+   581f50c..8346610  main -> main
+=== Job Scrape Completed: Sun Apr 19 22:17:07 CST 2026 ===

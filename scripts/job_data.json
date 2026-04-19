@@ -1,1 +1,246 @@
-/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/daily-job-scrape.sh: line 38: timeout: command not found
+[
+  {
+    "name": "AI原生工程师（应届高潜）",
+    "salary": "16-25K",
+    "company": "实战云",
+    "area": "北京·朝阳区·朝外",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "唐女士 · Hr主管",
+    "security_id": "lAiCpdvSevGH9-I1d6ppvZ34sTJjBoK82x-65kR-VhDfBsejMUS9nCf3plnTaj4Gwc6JXSRXxDiGbdR4Rm17tLk7PraPzZp1VksCpyWevfpOp0YmQmqU8ZaXxDMmWzQcmx8i_dXh6IJ-8cd4b0brBpNz3QZ_bc18wFTE0y6c6as3rpu6gOt3yazZ9RTvqGWBd-OTcy9dO2ZpB6FCosBMAI_lbIWbIQmw9yvbGUNz3YLAIbIxFNt_kzKcp5QJVmEliRejMODH8WwqeZy1gF27rDW3yX_jNkBQvDeYvjuNwocojRHjXeGNUO3b6Dsj6kMX9LAqEgHp_w~~",
+    "url": "https://www.zhipin.com/job_detail/788d886e1a5e66180nd43N69GFBR.html"
+  },
+  {
+    "name": "AI产品经理",
+    "salary": "15-20K·15薪",
+    "company": "疯狂游戏",
+    "area": "北京·海淀区·学院路",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "B端产品",
+    "boss": "陈女士 · HR",
+    "security_id": "ZBIGM50cujyc8-H1VSM9lp31tKSJAkV6F5xKRGGoJEFQcPW7mjzNm5hFeLhn6R8WmKQVsk7JtFARYpskzsxjaVHgOYKro8j-hPMTUGBR9KFjGRaFVHBXNvwFSGND7J16tNcMD1PQJgpZE-2V0XAC3yMBIYGXcMinKuCZgwesACeOHUz1WQ39--2IQk7DH4qUmDG11MQYkI8Xj4zFVOPMe5UYTuqTnWtMjZ1cD67DaT8O5HeBesszlmvYkVMXM4n6qQcVOOby09HEjcg5LfOnKy1c85QP3srKWvtCUi8tWf9m2A~~",
+    "url": "https://www.zhipin.com/job_detail/a4fb3633f0aec1600nd43tW-FlBX.html"
+  },
+  {
+    "name": "社交 AI 产品经理",
+    "salary": "15-18K·15薪",
+    "company": "陌陌",
+    "area": "北京·朝阳区·望京",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "柳先生 · 产品总监",
+    "security_id": "-G06LCxEDlLUi-M18gfiLNV6mfLErKWuOXuCL5u_3WRKsI7aAkRSWW9AhZq9-yP6iCpOGSw1tEr1LOgPKDFbWQzD8GMgeAHT5bMJMmWDbQfYILMZ5eOtg29exPpiXp-dypZkb32mj3k48ujK_QUH7Z_VjtrI6jF1HyRVjx9rm-xe4j7PWITOgnGunlQ7Rv-yItDORUUNpORRbqPmEriUUWR3uXR7uM4uifl28QEULPYEiY9WF73-Nci_qKUe27kLzdAAcPfNZprRcafLIMZBEdDGx3LDEHuhY-gFYwuQ3sW2KA~~",
+    "url": "https://www.zhipin.com/job_detail/dd9a8b79897fca1e0nR60tW7E1ZY.html"
+  },
+  {
+    "name": "AI产品经理（校招）",
+    "salary": "16-19K·15薪",
+    "company": "转转集团",
+    "area": "北京·海淀区·清河",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "C端产品",
+    "boss": "杜禹衡 · HRBP",
+    "security_id": "lP_88jbGAibHM-N10S6H0DiXeeNQydukklRnyWxCUxTLd_4godEOoM2Fv-SkLSNFiCOHSNruYh5RPBenN_T0n8mFx59zjEdB5QpARFFUN7hBvVdO3Ro_RUKUvx0SIv8FVz4ehrPDnIs397hrSICaI9EVpxF63n7iq2CVAYXzzC8G8xsndfNtdfocl-MEKbIWBOl-7XBYDZD_WhZHrsSL4OQWi8tcMdjeQS4b7Uy-c6lKEsRSmSoLkyBEUz0-Q3s3Jwwv1LVAy6ZAJvcSssQHJX-K5MMCJmZumyOUgk3YIZFXr4pxUw~~",
+    "url": "https://www.zhipin.com/job_detail/31f81a36dda2f3b30nZ70tW8E1RZ.html"
+  },
+  {
+    "name": "ai产品经理",
+    "salary": "15-20K·15薪",
+    "company": "趣领智言(苏州)",
+    "area": "北京·朝阳区·朝外",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "语义类AI",
+    "boss": "钱女士 · 招聘HR",
+    "security_id": "Jm3ufT5YYBshD-613Jqxeh53mWEtUJotBGDelEo8V0ubEGVN8_mhHX-Mifk_Jd5zvhsgQP3M3twHkYQvGHsH2Bl7xM42hiRRRI2GHIoDP3VX0cBiL1YzGqdIDacttO5FPbDs1ssYJyzY8xi4lGZm5qorkM5txJE5gJvxV122w5CsubzDW0aOBYtBG1kyb1D_bRzdX79FizLMyttlhZXrYBuG-VBO66qwX64f0kymr4PKWuL-eW_6fvgmYd9JMk9mseT1XzdrgBFWeoUBH2r2wZJJUiYnXRAt4YLpbEaWba8nCFego0r5DZv3bbYlOpKue0AElIU_Kg~~",
+    "url": "https://www.zhipin.com/job_detail/9aabfde2a44b00ce031y0ty9EFJX.html"
+  },
+  {
+    "name": "AI产品经理-26 年校招(A36456)",
+    "salary": "15-20K·14薪",
+    "company": "爱奇艺",
+    "area": "北京·朝阳区·工体",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "苏先生 · HR",
+    "security_id": "UIzYSdq1R4VDR-81prr94xexmIaQdA-VZhlNKjHKgJK7zCPOqobvzDDuyGZ6Hs4U0r2Itmxsvkl4bXUj7kL1o_oumyFXWbBVJqaKZFmRpUQ6v59SF-m5T-uTrmGXae8fyuPfFZR9KyRIwgGechtp4uCTxmDR49a30HMCiNye4OGFUNqEXzCpgH3Dqf0D72ca_WdmsG6m1T4iv-NA9jvnf2ZPSWcC5CDQ2mSYzwPxq28s8zGf58waEeyDXwSOB7elsqnoI-8hPveRZo5NzmtQUh2nUskiaO8a95Yf-V7ezTxxhJDC",
+    "url": "https://www.zhipin.com/job_detail/a9feac38335122d20nV53N-_GVJU.html"
+  },
+  {
+    "name": "AI产品经理实习生-A100340",
+    "salary": "面议",
+    "company": "小米",
+    "area": "北京",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "校招",
+    "boss": "王旭楠 · 校招顾问",
+    "security_id": "EB9UJuugDZH58-e1TvLhc-r0nt6C7K6XmTkLBgXNvDjJlI5TXXVTzzGATElSqFt51-4LRcJsHQS8wqyiyAR-WumYaGvpndrrTJoSGAhDc3oiiYYB-fm3wHYkH_FkvTshb2EUvZbCqQqHvD-fghAZ6T9AP5VzKdC_4d3UeyptydkDbbn-dXIhKxng4BfsZZM4iH8vy2OkLDKzbiy_n4rMd6aEsXqIu-0HWyTXowUKVcxQ3eeq8zD4k5pljroJmKkFZTukJzAR6TQaqeGPtdrZ88WrytUSm6038vyYZ0dq5EfhWrGO",
+    "url": "https://www.zhipin.com/job_detail/500b3f9c8c7801380nZy09W9FlRU.html"
+  },
+  {
+    "name": "ai产品经理",
+    "salary": "15-30K",
+    "company": "知页简历",
+    "area": "北京",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "C端产品,AI",
+    "boss": "郭先生 · 移动端负责人",
+    "security_id": "g6utVFRiV81Zt-X1X39TCR_1hIzPPnUzp7s2ngjFBVJOcnRFsqzXYpGBDbrk8Pi9R7U1FpqtaRlmCw4oMts2XZneQxvv8a2XP3xdfV0QY0XfTsTVTBO3iCDUrcmS5U9JX4YXIoaagHn44DvwQHDcbbchgfWI8YtTPqeqwQBHxlNRRmWURt1kRHLx6nKaponii-elUbWZpGm2ZsyQyp39_O2_T-8_1QIwDSlwK2p-08NE7JBaedlGo7KU1QSYvIox1qbzZm5dREtH3KdE0Jc9PBR75Vr727c8wRimzlvNByT-Ag~~",
+    "url": "https://www.zhipin.com/job_detail/7c48316be6afc33103x_39q6EFZY.html"
+  },
+  {
+    "name": "AI产品运营-抖音生活服务",
+    "salary": "12-20K·15薪",
+    "company": "字节跳动",
+    "area": "北京",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "B端产品",
+    "boss": "江豫 · 招聘HR",
+    "security_id": "7qh0qAEezgFMM-Z1WvzwYOYTtH7zkQcCll9bRXXFW1U7epBUsrR1aivHhvxpE8sa4ZSurPJeGMfxodY4b_He2nOHukSwNFzy846RSM6YRI29T1bFFSQAdQ7W-Xd6wwtcx4rgZbkpkFyM1NAd2TzdLusy5GnIqfMcW6eqbTLr-VkcTK4uSL39oV0WPUVvPNKmcX-nMn1kywyYf_cJlOH6ngDrq3cPCpaeXM7WoRj7_1FqDcS0-c8oDJjUFoU5qAAMNvR6kmTz8Lq-0nnNK11_0nOem38unNrkRtBPw0PZvFMYvGa6",
+    "url": "https://www.zhipin.com/job_detail/e1032aef6b4466240nd43tq0GFJW.html"
+  },
+  {
+    "name": "【2026届春招】AI产品经理 (MJ003117)",
+    "salary": "15-25K",
+    "company": "搜狐畅游",
+    "area": "北京",
+    "experience": "在校/应届",
+    "degree": "学历不限",
+    "skills": "",
+    "boss": "王女士 · Hr",
+    "security_id": "7bnE4BbmM9IAf-A1JPLv5U2GQRYZzFycsf45Cpusub0e_1soTwVsow6cK9z67uLi2vCm3c1W1jnv9wyPKldOJQ3MJdxGBkah6k-MTLz18EaQiTAb109bHnPqkyGKwRy6P8QmlzwHg4NmvzTgl2-hQRjpl2fzwoyzOyOwFbiTRHaV7FBmjDlmfPA7y8s5-mzS9ZFMXwV9LeL-a3AeLyzebPaZzBo4pBdN1DRmOGMrfWcQuNObzFoyHf891g71_J1FFbmfQT-cDMSOxNAABMvLFqYZGymhoIGyyBadnRqaBrUJtg~~",
+    "url": "https://www.zhipin.com/job_detail/5f78bc327b81dbac0nVy39-4GFpQ.html"
+  },
+  {
+    "name": "AI数据产品经理",
+    "salary": "18-24K·16薪",
+    "company": "乐信圣文",
+    "area": "北京·海淀区·清河",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "TO B,中台产品,数据治理",
+    "boss": "韦振耀 · 招聘者",
+    "security_id": "eKcEPxlSXTJdV-W1qYE6Hce5IOCrMBUqtZXPpkd1VMLSEbjdxj51O65sxHXlOtZw9d3hZYZwomWU8Ape2p6RvfnFFTBihmvAEefxcz3NxzGPY3ClekMYwZUCjEPTeR7d1xkAbbdX8f5KzfbaWO5QAUzf4DQMiZgLEmxhuh1NTABVesTPkk4AycFc1AU1aCP6I0HYvs9C5WmvSAcsldwaf8JFCOjIRfXj7GURMuOxx0rLLI_DOMyy4J84RrU_snOXmCNZCkYLbtq3wmbsEfaViSQnMpI6Y4v4L5m9xRnREpEe9Xg~",
+    "url": "https://www.zhipin.com/job_detail/dfd894cd3674a0750nd42Nq4GVFX.html"
+  },
+  {
+    "name": "AI产品经理 接受应届！",
+    "salary": "12-20K",
+    "company": "大智作",
+    "area": "北京·朝阳区·四惠",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "钟先生 · HR",
+    "security_id": "P6kLfh3aFjOUy-n1NHLynCcF2N44p08_eqkZoQu5uT4Wgnm1VenpYJyboqLC3R5aq5EF8ArTiMFxVV1IiexYu-clmt5fOuPFO4PPlMAs9cNZQ2xRd_JOpuKqNF2kM37EDS9YlklSr4XmVDz6DqRUBLIEH55VyYWu73ZyiIK4HlczHxPcEbVSrid4sF1mdzMNaLg3hrMYaDEoIA5-OGFacNr5O7IG2uQRzOOTfN9R0jTwiWHj7_LBDKHdmmalLvIDMhs2WTzjnxBbW4odmKEgRauqThcHCt_RILqPjyqx7mIbYceoMA~~",
+    "url": "https://www.zhipin.com/job_detail/89f9a169cba1a0fc0nZy0t24ElVU.html"
+  },
+  {
+    "name": "AI产品经理（校招生）",
+    "salary": "17-22K·16薪",
+    "company": "百度",
+    "area": "北京·海淀区·上地",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "李女士 · Recruiter",
+    "security_id": "uDWk_RdLBECwj-I1CDzwel2UHR9z5R6y2BhB2zWxzk6Xz0EddvuSNU59DOhRMIhT-4ryk4G-pZG2uGIE8Bl5JYPImrP9DhmuFxpbh9l783Q2b27MaqGVHtan9FW598Z0hU3vcprqXksd5ij2VVFRLbLt_EBFLG47t-emE8Gt2eFytRyAkHI8gIeESFSXJnT2RaMhvuQnj8jb6ILBirZScitPOBXWgdTLh9wMjR1RenSyfnHJD-BHfmcmxE-aHXxHZvPxamf7KTyf2IbjVbTy06WtVPniPEIrTcj8ZA4~",
+    "url": "https://www.zhipin.com/job_detail/1f4b00fb467bbe240nd52du0FVZR.html"
+  },
+  {
+    "name": "AI产品经理（校招）",
+    "salary": "11-18K",
+    "company": "中科闻歌",
+    "area": "北京·海淀区·五道口",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "李先生 · HR",
+    "security_id": "P6jtVcVad6BBN-01AKPfWaG60Wyz6enYB-REQsFcA7dtk9hq2iFbtQpf8Q1OGDJ6DAfFUmEvVLOVdbIryk4YaTz2PSo3MmSq_3Oej_nuJvfOxeVYpMWULPMIfr-xZIaz8Z9ZC9iOlrznPnnarOwHD1YXQeubJhuQHEEYHrfag-H13uOYMljb8omQw9NHbArt5S1pqf10AwjONbsHEvgZNelw8pmoRE1vqhUt_Ohh3bIw612TeKCb9eOT9hwscDe28_vE5W4Is6RZjurMeLWuuV0dY1SNjs-ioXQ6_0p94Z1_",
+    "url": "https://www.zhipin.com/job_detail/d240a62e2074fe050nd60ti6E1RV.html"
+  },
+  {
+    "name": "ai产品经理",
+    "salary": "18-35K·20薪",
+    "company": "京东集团",
+    "area": "北京·大兴区·亦庄",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "夏女士 · hr",
+    "security_id": "kyNogwv1gzipE-X1nUuxUmc2ELGiTDUeSTMaNtW7F682XAwuQtZswCxql8BtQ6yZcXAUFdpUadm2Ez9LSQCTVseEArUlsfBk-aJWBnmPMpGq3_7rfWLt43HIFymLRAgDcHmYMEUOiRHJxjol-X_O_XIBBUWS5Ih30fUUid8yMjtedVeTi28NjGaJhc-sIoEnNt707tiJQc7Npd8DoolinjBe-8poO-6aY1rJFqSNASq3XokWLmAoNpDXo5RnptUt8sTIk8dyy2u6vLN_hln1o3Kd3OM6-tYEJksJ_ZV7EXdxPI2emw~~",
+    "url": "https://www.zhipin.com/job_detail/e7ee9fe96c4897700nd62Nm4EFtR.html"
+  },
+  {
+    "name": "ai产品经理",
+    "salary": "15-30K",
+    "company": "庭宇",
+    "area": "北京·海淀区·清河",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "吴女士 · 招聘者",
+    "security_id": "_7qYRQxkSh-b0-l1VrZceJt2IMsgywlo4pkRZN6tNoDQIsG53cy-ciXvX6ZbZ-MqM0wdeqQDXyoE5xzK5Gj_c4tFYPW-AUJ0vIvymBk3nmOoJBLhdNhMqZeLr8wVYjPUi7FK97qQH04u719y4u_Mu5zteM7NAAQzkuJULij5I4vYRzr58RfyVAEWThLHBm20ChIjkA6p2BWf8qzADcg0E_AEDyYYqF8p5UAbr_tHb9je5jjYzdx4y_JkQpebTcengJ7cqCzGfBSpIQZRBZdBhg7OQZD0_ZfbTe7_HmdsDzJUg5DT",
+    "url": "https://www.zhipin.com/job_detail/416fcf95bb3cacbe0nZ83Nq4EFZY.html"
+  },
+  {
+    "name": "AI产品经理（校招）",
+    "salary": "15-18K·13薪",
+    "company": "北京天润融通",
+    "area": "北京·大兴区·亦庄",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "朱女士 · 资深HRBP",
+    "security_id": "Me2tHGVp16jDZ-71uwal3ugjalJ4pkKyOMcYuDMsjsBgmKP9ULZEkmSF6bn5Lsct9S_wnvoMtw6xGeUYmiNisApepVqRp_9fvlDBQTP07bXqDOCf5M08cKHlqFua57Gq3d-g5dQtCEzWfIm-BmeXgLlhoMIsUqrc9N_vasUBzUlLNFTAKVjGbLYuz-KeER1jYKNCzfBwDMuzvxqdJGvFLmt01Ik7UELgTMAnbhbH1KKSN9BI7JYnBqX3qvmnk1RB4XwdIaEOcjtmFCGplAK89cv1i_8YB3CYgkaOAfsx4em-Og~~",
+    "url": "https://www.zhipin.com/job_detail/f9b3ed3eecf0e92d0nZ82dS5EVJX.html"
+  },
+  {
+    "name": "2026届校招-集团英才-AI方案工程师",
+    "salary": "15-25K",
+    "company": "神州数码",
+    "area": "北京",
+    "experience": "在校/应届",
+    "degree": "本科",
+    "skills": "",
+    "boss": "王子婷 · HR",
+    "security_id": "WdxmH6E2FvOE9-y18CE0l7f0kVZCU92moB2Pwu8BuQbfLX4VjCQogqRGhB3SsI_KuBC54qNECrlEDkuo5u8bVFstd2nnc9DB7PLsTKYhWKHgvxrMmjKxY6ZYoLFKz0DBxiUDJpl0r9Obrq11jEC7uMgPZCCcRr4__Rs3F2bwYdGoliz9-Khm2tslkQOi1tLza8MTgROGNXAA6zP1YrTD_8tn3J_5M5wz3nbgKBDIANc-OrOMYBlBvlU9vC4D_7TRfza-wm9qfgH-zKTtAk5sYJjJa9mXfwwNCl9sNr-O3FY8vX7b",
+    "url": "https://www.zhipin.com/job_detail/db507ef29ca7de500nd40tu4F1FU.html"
+  },
+  {
+    "name": "AI产品经理（有害生物防治）",
+    "salary": "15-25K·13薪",
+    "company": "中科神探",
+    "area": "北京·海淀区·上地",
+    "experience": "在校/应届",
+    "degree": "硕士",
+    "skills": "",
+    "boss": "袁飞 · CEO",
+    "security_id": "hc0dw5CuW2j3n-w15kwWFHNdGus9hnoJrkABERMIRs9KxnG9Zur8wMPHVznUkf-Twbzf9JXkoz6s72u1-IvpZpe9KdueDkM0O0smtiM2kRX2sTuinCuDoAFYYWUkL3knE-JumYYZb1xtoRrJOl8LRlAcBIe1m53Zq_fUae3KpPEB4FZmlpE2au56z0w4IZDIr9f3DUVDKDi9ga1-wsiKbo5RoL0WomP_FmLV11UTt_1qzwUztuYszuOPDE2X2VIAuxzQOOmvGZ2LjX3scoVDbteJ7o1ULnlLDy-jKN6tKxEUjCg~",
+    "url": "https://www.zhipin.com/job_detail/80bfdc8814b316900nV92dS-ElJR.html"
+  },
+  {
+    "name": "AI产品经理（北京）",
+    "salary": "15-30K·15薪",
+    "company": "维悦时刻",
+    "area": "北京·海淀区·学院路",
+    "experience": "在校/应届",
+    "degree": "学历不限",
+    "skills": "",
+    "boss": "王女士 · 校招hr",
+    "security_id": "zRj7c0CrHgIkQ-L1kak4X4z6NfmXO2WDKjKwpLDcEj9I3j5oziLUc1DEofeuxRSI6ol9MD7UJHvqXtlr91Dz8qehwnVW6mOTiMdVVOLmu2Piwm_dqXSvswB1p0YoMaw2IgYi8lcrTxyMpjdpAbqQuV1VfNfidv3bpqnLW6lQQ1cxB4I6s7PPryP_tDsB6LOh-LZrq6Yf77E_9pAFH8rPOepIqqqq-d33FmEj0-3Ux57M5CoBoMgXnVCW86Xyp10B27EeuRG-GI6QDdcf9vgw70KmpWPbRockLxm5B76KgyqGpHAV",
+    "url": "https://www.zhipin.com/job_detail/43b7ed92bc35a4ad0nd629-5ElNT.html"
+  }
+]
+
+  Update available: v1.6.10 → v1.7.4
+  Run: npm install -g @jackwener/opencli
+
