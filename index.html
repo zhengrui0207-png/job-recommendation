@@ -4,537 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>郑睿 - Boss直聘岗位推荐分析</title>
+    <script src="jobs.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .header {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .header h1 {
-            font-size: 32px;
-            color: #1a1a2e;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .header h1::before {
-            content: '';
-            width: 6px;
-            height: 36px;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            border-radius: 3px;
-        }
-
-        .header .subtitle {
-            color: #666;
-            font-size: 16px;
-            margin-bottom: 24px;
-            margin-left: 18px;
-        }
-
-        .resume-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .summary-item {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 14px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .summary-item::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-        }
-
-        .summary-item h3 {
-            font-size: 13px;
-            opacity: 0.85;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .summary-item p {
-            font-size: 17px;
-            font-weight: 600;
-        }
-
-        .filters {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .filters h2 {
-            font-size: 18px;
-            color: #1a1a2e;
-            margin-bottom: 16px;
-        }
-
-        .filter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .filter-tag {
-            background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);
-            border: 1px solid #667eea55;
-            color: #4361ee;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-        }
-
-        .jobs-table {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .jobs-table-header {
-            display: grid;
-            grid-template-columns: 50px 180px 130px 1fr 90px 100px 140px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 18px 24px;
-            font-weight: 600;
-            color: white;
-            font-size: 14px;
-        }
-
-        .job-row {
-            display: grid;
-            grid-template-columns: 50px 180px 130px 1fr 90px 100px 140px;
-            padding: 24px;
-            border-bottom: 1px solid #eee;
-            align-items: start;
-            transition: all 0.3s;
-        }
-
-        .job-row:hover {
-            background: #f8f9ff;
-            transform: scale(1.01);
-        }
-
-        .job-row:last-child {
-            border-bottom: none;
-        }
-
-        .rank {
-            font-size: 26px;
-            font-weight: bold;
-            color: #4361ee;
-            text-align: center;
-        }
-
-        .rank.gold { color: #ffd700; text-shadow: 0 0 10px #ffd70066; }
-        .rank.silver { color: #c0c0c0; }
-        .rank.bronze { color: #cd7f32; }
-
-        .company-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .company-name {
-            font-weight: 700;
-            color: #1a1a2e;
-            font-size: 15px;
-        }
-
-        .job-title {
-            color: #4361ee;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .company-meta {
-            font-size: 12px;
-            color: #888;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .company-meta span {
-            background: #f0f0f0;
-            padding: 2px 8px;
-            border-radius: 4px;
-        }
-
-        .company-meta .scale-1k { background: #e8f5e9; color: #2e7d32; }
-        .company-meta .scale-10k { background: #e3f2fd; color: #1565c0; }
-        .company-meta .listed { background: #fff3e0; color: #e65100; }
-
-        .salary {
-            color: #e63946;
-            font-weight: 800;
-            font-size: 17px;
-            white-space: nowrap;
-        }
-
-        .salary small {
-            font-size: 12px;
-            font-weight: 500;
-            color: #888;
-        }
-
-        .job-desc {
-            font-size: 13px;
-            color: #555;
-            line-height: 1.7;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .job-desc .highlight {
-            color: #4361ee;
-            font-weight: 500;
-        }
-
-        .score {
-            text-align: center;
-        }
-
-        .score-value {
-            font-size: 32px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .score-bar {
-            width: 70px;
-            height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            margin: 8px auto 0;
-            overflow: hidden;
-        }
-
-        .score-bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-            transition: width 0.5s ease;
-        }
-
-        .match-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            justify-content: flex-start;
-        }
-
-        .match-tag {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 500;
-        }
-
-        .match-tag.ai { background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%); color: #4361ee; border: 1px solid #667eea44; }
-        .match-tag.strategy { background: #e8f5e9; color: #2e7d32; }
-        .match-tag.growth { background: #fff3e0; color: #e65100; }
-        .match-tag.active { background: #e8f5e9; color: #2e7d32; }
-        .match-tag.scale { background: #e3f2fd; color: #1565c0; }
-
-        .action-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: all 0.3s;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .recommendation {
-            margin-top: 10px;
-            padding: 10px 12px;
-            background: #f0f4ff;
-            border-radius: 10px;
-            font-size: 12px;
-            color: #555;
-            line-height: 1.5;
-            border-left: 3px solid #667eea;
-        }
-
-        .recommendation strong {
-            color: #4361ee;
-        }
-
-        .recommendation .pros {
-            color: #2e7d32;
-        }
-
-        .recommendation .cons {
-            color: #c62828;
-        }
-
-        .section-title {
-            font-size: 18px;
-            color: #1a1a2e;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            border-radius: 2px;
-        }
-
-        .skills-analysis {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
-        }
-
-        .skill-item {
-            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
-            border: 1px solid #667eea22;
-            padding: 16px;
-            border-radius: 12px;
-            text-align: center;
-            transition: all 0.3s;
-        }
-
-        .skill-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
-        }
-
-        .skill-item .skill-name {
-            font-weight: 600;
-            color: #1a1a2e;
-            margin-bottom: 4px;
-        }
-
-        .skill-item .skill-level {
-            font-size: 12px;
-            color: #666;
-        }
-
-        .score-rules {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 24px;
-            margin-top: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .score-rules table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 14px;
-        }
-
-        .score-rules tr {
-            border-bottom: 1px solid #eee;
-        }
-
-        .score-rules th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 14px 12px;
-            text-align: left;
-            font-weight: 500;
-        }
-
-        .score-rules td {
-            padding: 14px 12px;
-            color: #555;
-        }
-
-        .score-rules tr:last-child {
-            border-bottom: none;
-        }
-
-        .summary-cards {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 24px;
-            margin-top: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .summary-cards .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 16px;
-        }
-
-        .summary-card {
-            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
-            border: 1px solid #667eea22;
-            padding: 20px;
-            border-radius: 14px;
-        }
-
-        .summary-card.gold {
-            border-color: #ffd70055;
-            background: linear-gradient(135deg, #ffd70008 0%, #ffed4a08 100%);
-        }
-
-        .summary-card h4 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .summary-card.gold h4 { color: #b8860b; }
-        .summary-card.silver h4 { color: #71797E; }
-        .summary-card.bronze h4 { color: #cd7f32; }
-
-        .summary-card p {
-            font-size: 13px;
-            line-height: 1.7;
-            color: #555;
-        }
-
-        .summary-card ul {
-            margin: 10px 0 0 20px;
-            font-size: 13px;
-            color: #555;
-            line-height: 1.8;
-        }
-
-        .active-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: #e8f5e9;
-            color: #2e7d32;
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-top: 6px;
-        }
-
-        .active-badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: #2e7d32;
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            color: rgba(255,255,255,0.6);
-            font-size: 13px;
-            padding: 20px;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; padding: 20px; color: #333; }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header { background: rgba(255,255,255,0.95); border-radius: 20px; padding: 40px; margin-bottom: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); text-align: center; }
+        .header h1 { font-size: 2.5em; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 10px; }
+        .subtitle { color: #666; font-size: 1.1em; margin-bottom: 20px; }
+        .resume-summary { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px; }
+        .summary-item { text-align: center; }
+        .summary-item h3 { color: #667eea; font-size: 0.9em; margin-bottom: 5px; }
+        .summary-item p { font-size: 1.2em; font-weight: 600; }
+        .section-title { color: #667eea; font-size: 1.5em; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(102,126,234,0.3); }
+        .jobs-table { background: rgba(255,255,255,0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin-bottom: 24px; }
+        .jobs-table-header { display: grid; grid-template-columns: 60px 200px 150px 1fr 80px 140px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 18px 24px; font-weight: 600; color: white; font-size: 14px; }
+        .job-row { display: grid; grid-template-columns: 60px 200px 150px 1fr 80px 140px; padding: 20px 24px; border-bottom: 1px solid #eee; align-items: center; transition: background 0.2s; }
+        .job-row:hover { background: #f8f9ff; }
+        .job-row:last-child { border-bottom: none; }
+        .rank { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; font-size: 14px; }
+        .rank.gold { background: linear-gradient(135deg, #ffd700, #ffb400); }
+        .rank.silver { background: linear-gradient(135deg, #c0c0c0, #a8a8a8); }
+        .rank.bronze { background: linear-gradient(135deg, #cd7f32, #b87333); }
+        .company-name { font-weight: 600; font-size: 15px; color: #1a1a2e; margin-bottom: 4px; }
+        .job-title { font-size: 13px; color: #667eea; margin-bottom: 4px; }
+        .company-meta { font-size: 12px; color: #888; }
+        .active-badge { display: inline-block; background: #4caf50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-top: 4px; }
+        .salary { font-size: 16px; font-weight: 700; color: #e65100; }
+        .job-desc { font-size: 13px; color: #555; line-height: 1.6; }
+        .highlight { background: linear-gradient(135deg, #667eea22, #764ba222); padding: 1px 4px; border-radius: 3px; color: #667eea; }
+        .score { text-align: center; }
+        .score-value { font-size: 24px; font-weight: 700; color: #667eea; }
+        .score-bar { width: 60px; height: 6px; background: #eee; border-radius: 3px; margin: 5px auto 0; overflow: hidden; }
+        .score-bar-fill { height: 100%; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 3px; }
+        .action-btn { display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 500; transition: transform 0.2s, box-shadow 0.2s; }
+        .action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+        .job-updated { text-align: center; padding: 15px; color: #888; font-size: 13px; background: #f8f9fa; }
+        .job-loading { text-align: center; padding: 40px; color: #666; font-size: 16px; }
         @media (max-width: 1200px) {
-            .jobs-table-header,
-            .job-row {
-                grid-template-columns: 40px 1fr 100px 80px 100px;
-            }
-
-            .jobs-table-header > *:nth-child(4),
-            .job-row > *:nth-child(4) {
-                display: none;
-            }
+            .jobs-table-header, .job-row { grid-template-columns: 50px 1fr 120px 80px; }
+            .jobs-table-header > *:nth-child(4), .job-row > *:nth-child(4) { display: none; }
         }
-
         @media (max-width: 768px) {
-            .jobs-table-header {
-                display: none;
-            }
-
-            .job-row {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
+            .jobs-table-header { display: none; }
+            .job-row { grid-template-columns: 1fr; gap: 10px; padding: 15px; }
+            .job-row > * { grid-column: 1; }
+            .rank { width: 30px; height: 30px; font-size: 12px; }
         }
+        .resume-optimization { background: rgba(255,255,255,0.95); border-radius: 20px; padding: 30px; margin-top: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+        .tip-card { background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%); border: 1px solid #667eea22; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .tip-card h4 { color: #667eea; margin-bottom: 10px; }
+        .tip-card ul { list-style: none; padding: 0; }
+        .tip-card ul li { padding: 8px 0; font-size: 14px; color: #555; border-bottom: 1px solid #eee; }
+        .tip-card ul li:last-child { border-bottom: none; }
+        .tip-card ul li::before { content: '✓ '; color: #667eea; font-weight: bold; }
+        .optimization-actions { display: flex; gap: 15px; margin-top: 20px; }
+        .btn-optimize { padding: 14px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s; }
+        .btn-optimize:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: flex-start; padding: 40px 20px; overflow-y: auto; }
+        .modal-content { background: white; border-radius: 16px; width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; border-bottom: 1px solid #eee; }
+        .modal-header h3 { margin: 0; color: #667eea; }
+        .modal-close { background: none; border: none; font-size: 28px; cursor: pointer; color: #999; }
+        .modal-close:hover { color: #333; }
+        .modal-body { padding: 30px; }
+        .modal-footer { padding: 20px 30px; border-top: 1px solid #eee; display: flex; justify-content: flex-end; gap: 15px; }
+        .btn-save { padding: 12px 24px; background: #4caf50; color: white; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .btn-save:hover { background: #43a047; }
+        .btn-cancel { padding: 12px 24px; background: #f5f5f5; color: #666; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; }
+        .btn-cancel:hover { background: #e0e0e0; }
+        .optimization-header { background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .optimization-header h4 { color: #667eea; margin-bottom: 10px; }
+        .overall-tips { list-style: none; padding: 0; margin: 0; }
+        .overall-tips li { padding: 6px 0; color: #555; font-size: 14px; }
+        .editor-section { background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+        .editor-section h4 { color: #333; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 2px solid #667eea; }
+        .edit-group { margin-bottom: 15px; }
+        .edit-group label { display: block; font-size: 13px; color: #666; margin-bottom: 5px; font-weight: 500; }
+        .edit-group input, .edit-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .edit-group input:focus, .edit-group textarea:focus { outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+        .edit-group textarea { resize: vertical; min-height: 100px; }
+        .exp-editor { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; position: relative; border: 1px solid #eee; }
+        .exp-tips-banner { background: linear-gradient(135deg, #ffd70015 0%, #ffed4a15 100%); border: 1px solid #ffd70055; border-radius: 8px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px; }
+        .exp-tips-label { color: #b8860b; font-weight: 600; }
+        .exp-tips-content { color: #856404; }
+        .exp-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+        .btn-move, .btn-delete, .btn-add-exp { padding: 6px 12px; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .btn-move { background: #e3f2fd; color: #1976d2; }
+        .btn-move:hover:not(:disabled) { background: #1976d2; color: white; }
+        .btn-move:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-delete { background: #ffebee; color: #c62828; }
+        .btn-delete:hover { background: #c62828; color: white; }
+        .btn-add-exp { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; }
+        .btn-add-exp:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(102,126,234,0.4); }
+        .textarea-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .btn-bold { padding: 4px 10px; background: #fff3e0; border: 11px solid #ffcc80; border-radius: 4px; font-size: 14px; font-weight: bold; color: #e65100; cursor: pointer; }
+        .btn-bold:hover { background: #ffcc80; color: #fff; }
+        .keyword-hint { font-size: 12px; color: #667eea; font-weight: normal; margin-left: 10px; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .section-header h4 { margin: 0; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>郑睿 - Boss直聘岗位推荐</h1>
-            <p class="subtitle">基于简历分析 + Boss直聘实时数据 | 2025年4月9日</p>
-
+            <p class="subtitle">基于简历分析 + Boss直聘实时数据 | <span id="updateTime">加载中...</span></p>
             <div class="resume-summary">
                 <div class="summary-item">
                     <h3>最高学历</h3>
@@ -545,524 +120,39 @@
                     <p>2-3年 (社招)</p>
                 </div>
                 <div class="summary-item">
-                    <h3>核心技能</h3>
-                    <p>AI Agent · RAG · 用户增长</p>
+                    <h3>目标薪资</h3>
+                    <p>20-40K</p>
                 </div>
                 <div class="summary-item">
-                    <h3>目标薪资</h3>
-                    <p>20-35k · 北京</p>
+                    <h3>核心技能</h3>
+                    <p>AI产品运营 / Agent / RAG</p>
                 </div>
             </div>
         </div>
 
-        <div class="filters">
-            <h2>筛选条件</h2>
-            <div class="filter-tags">
-                <span class="filter-tag">✓ 薪资 ≥ 15k</span>
-                <span class="filter-tag">✓ 1-3年经验 (社招)</span>
-                <span class="filter-tag">✓ AI相关优先</span>
-                <span class="filter-tag">✓ 北京</span>
-                <span class="filter-tag">✓ 100人以上公司</span>
-                <span class="filter-tag">✓ 一周内活跃</span>
-            </div>
-        </div>
-
-        <div class="skills-analysis">
-            <div class="section-title">您的核心竞争优势</div>
-            <div class="skills-grid">
-                <div class="skill-item">
-                    <div class="skill-name">AI产品运营</div>
-                    <div class="skill-level">RAG Agent / 千穰能力 / 航班助手</div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">用户增长</div>
-                    <div class="skill-level">日均10w+流量 / 转化率+22%</div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">数据分析</div>
-                    <div class="skill-level">SQL / AB Test / RFM模型</div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">策略运营</div>
-                    <div class="skill-level">全链路转化 / 渗透率提升</div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">大厂背景</div>
-                    <div class="skill-level">航旅纵横/携程/字节/百度</div>
-                </div>
-                <div class="skill-item">
-                    <div class="skill-name">出行行业</div>
-                    <div class="skill-level">机票/用车/酒店场景经验</div>
-                </div>
-            </div>
-        </div>
-
+        <h2 class="section-title">推荐岗位</h2>
         <div class="jobs-table">
             <div class="jobs-table-header">
                 <div>排名</div>
                 <div>公司/职位</div>
                 <div>薪资</div>
-                <div>岗位简介</div>
-                <div>打分</div>
+                <div>岗位要求</div>
                 <div>匹配度</div>
                 <div>操作</div>
             </div>
-
-            <!-- 1. 爱奇艺 AI产品经理 -->
-            <div class="job-row">
-                <div class="rank gold">1</div>
-                <div>
-                    <div class="company-name">爱奇艺</div>
-                    <div class="job-title">AI 产品经理(A16769)</div>
-                    <div class="company-meta">
-                        <span class="scale-1k">1000-9999人</span>
-                        <span class="listed">已上市</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">20-30K<span><br><small>·14薪</small></span></div>
-                <div class="job-desc">
-                    <span class="highlight">AIGC创作平台</span>功能设计，负责<span class="highlight">Agent相关能力</span>建设，包括小说、剧本、影视成片等环节。
-                    了解影视内容制作流程，挖掘创作者痛点，协同算法/工程团队提升内容生成效果。
-                    <span class="highlight">加分项：熟悉AI漫剧、AI真人剧等AIGC内容生产流程。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">95</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:95%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI Agent</span>
-                    <span class="match-tag strategy">策略产品</span>
-                    <span class="match-tag growth">内容创作</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/5cc8d63cd0929c450nZ_3d-1EVRT.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>强烈推荐</strong><br>
-                        <span class="pros">+ Agent方向完全匹配</span><br>
-                        <span class="pros">+ 用户增长经验契合</span><br>
-                        <span class="pros">+ 上市大厂稳定</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. 小红书 智能策略运营 -->
-            <div class="job-row">
-                <div class="rank gold">2</div>
-                <div>
-                    <div class="company-name">小红书</div>
-                    <div class="job-title">智能策略运营</div>
-                    <div class="company-meta">
-                        <span class="scale-1k">1000-9999人</span>
-                        <span>D轮及以上</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">20-40K<span><br><small>·16薪</small></span></div>
-                <div class="job-desc">
-                    负责社区<span class="highlight">智能客服服务策略</span>制定，包括意图引导策略、转人工策略等，为智能客服解决率负责。
-                    与算法侧配合，进行意图整理和拆分，提升意图识别准确率。
-                    <span class="highlight">要求：掌握服务领域大模型应用路径和方法，具备客服agent意图识别能力建设经验。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">93</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:93%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI客服</span>
-                    <span class="match-tag strategy">策略运营</span>
-                    <span class="match-tag scale">D轮</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/db42ad3ef85a461e0nV83NW0EFRQ.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>强烈推荐</strong><br>
-                        <span class="pros">+ AI客服Agent完全匹配</span><br>
-                        <span class="pros">+ SQL数据分析要求契合</span><br>
-                        <span class="pros">+ 薪资上限高</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 3. 字节跳动 分销平台策略运营 -->
-            <div class="job-row">
-                <div class="rank silver">3</div>
-                <div>
-                    <div class="company-name">字节跳动</div>
-                    <div class="job-title">分销平台策略运营</div>
-                    <div class="company-meta">
-                        <span class="scale-10k">10000人+</span>
-                        <span>D轮及以上</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">20-40K<span><br><small>·15薪</small></span></div>
-                <div class="job-desc">
-                    负责<span class="highlight">番茄分销平台</span>的策略运营，为短剧收入、规模增长负责。
-                    从投放资源最大化角度，为分销商、代理商、达人机构建设更完善的匹配机制和能力。
-                    <span class="highlight">要求：熟悉互联网广告常识，具备流量平台运营相关经验。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">88</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:88%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag strategy">策略运营</span>
-                    <span class="match-tag growth">用户增长</span>
-                    <span class="match-tag scale">大厂</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/c4b432e4c6466d330nd6396_EVZV.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>推荐</strong><br>
-                        <span class="pros">+ 有飞书实习经历</span><br>
-                        <span class="pros">+ 流量运营经验匹配</span><br>
-                        <span class="cons">- 非AI核心方向</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 4. 字节跳动 用户增长产品经理-可颂 -->
-            <div class="job-row">
-                <div class="rank silver">4</div>
-                <div>
-                    <div class="company-name">字节跳动</div>
-                    <div class="job-title">用户增长产品经理-可颂</div>
-                    <div class="company-meta">
-                        <span class="scale-10k">10000人+</span>
-                        <span>D轮及以上</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">30-60K<span><br><small>·15薪</small></span></div>
-                <div class="job-desc">
-                    负责<span class="highlight">可颂</span>的用户增长工作，服务DAU的高速增长。
-                    基于数据、用户、行业的研究分析，持续孵化和验证新的激励增长玩法。
-                    <span class="highlight">要求：具有2年及以上互联网产品经验，有激励业务经验尤佳。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">86</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:86%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag growth">用户增长</span>
-                    <span class="match-tag strategy">产品经理</span>
-                    <span class="match-tag scale">大厂</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/96cbba70a8eeb12a0nZ60t--FFBQ.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>推荐</strong><br>
-                        <span class="pros">+ 用户增长经验高度匹配</span><br>
-                        <span class="pros">+ 薪资上限高</span><br>
-                        <span class="pros">+ 有飞书经历可内推</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. 腾讯 元宝AI产品经理 -->
-            <div class="job-row">
-                <div class="rank bronze">5</div>
-                <div>
-                    <div class="company-name">腾讯</div>
-                    <div class="job-title">元宝- AI产品经理（功能策划）</div>
-                    <div class="company-meta">
-                        <span class="scale-10k">10000人+</span>
-                        <span class="listed">已上市</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">25-50K<span><br><small>·16薪</small></span></div>
-                <div class="job-desc">
-                    负责<span class="highlight">元宝主对话功能</span>的规划和设计。
-                    深度理解大模型等技术发展和能力边界，在产品功能设计中展示模型智能。
-                    <span class="highlight">要求：有深度的AI工具使用习惯，对AI产品有热情。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">85</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:85%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI大模型</span>
-                    <span class="match-tag strategy">功能策划</span>
-                    <span class="match-tag scale">大厂</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/f2bea4b5e0c49c180nZ_3Nm1FlNZ.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>推荐</strong><br>
-                        <span class="pros">+ AI方向契合</span><br>
-                        <span class="pros">+ 大厂背景背书</span><br>
-                        <span class="cons">- 经验不限竞争激烈</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. 京东 AI产品经理 -->
-            <div class="job-row">
-                <div class="rank">6</div>
-                <div>
-                    <div class="company-name">京东集团</div>
-                    <div class="job-title">京东AI产品经理</div>
-                    <div class="company-meta">
-                        <span class="scale-10k">10000人+</span>
-                        <span class="listed">已上市</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">25-50K<span><br><small>·20薪</small></span></div>
-                <div class="job-desc">
-                    主导<span class="highlight">电商场景的AI创新探索</span>，聚焦交易、导购链路等核心方向。
-                    结合行业特性与业务场景，设计适配的AI产品方案，进行AI产品设计，制定产品路线图。
-                    <span class="highlight">要求：强产品规划能力，有实际B端大模型产品落地经验优先。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">82</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:82%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI产品</span>
-                    <span class="match-tag strategy">电商产品</span>
-                    <span class="match-tag scale">大厂</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/751d629a18ac5b1403F62tq7EldU.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>推荐</strong><br>
-                        <span class="pros">+ 电商场景经验匹配</span><br>
-                        <span class="pros">+ 薪资上限高</span><br>
-                        <span class="cons">- 需3-5年经验</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 7. 途家网 品类策略运营 -->
-            <div class="job-row">
-                <div class="rank">7</div>
-                <div>
-                    <div class="company-name">途家网</div>
-                    <div class="job-title">品类策略运营</div>
-                    <div class="company-meta">
-                        <span>100-499人</span>
-                        <span>B轮</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">20-40K<span><br><small>·16薪</small></span></div>
-                <div class="job-desc">
-                    负责<span class="highlight">途家民宿</span>品类策略运营。
-                    品类规划与管理，供应商赋能，提升房源数量和质量。
-                    <span class="highlight">要求：熟悉民宿/短租行业，有互联网平台运营经验优先。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">78</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:78%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag strategy">策略运营</span>
-                    <span class="match-tag growth">出行行业</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/be68f7c085ce84c60nVy2ty8F1dW.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>考虑</strong><br>
-                        <span class="pros">+ 出行行业经验匹配</span><br>
-                        <span class="pros">+ 携程背景加分</span><br>
-                        <span class="cons">- 公司规模较小</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 8. 翼鸥教育 AI产品经理 -->
-            <div class="job-row">
-                <div class="rank">8</div>
-                <div>
-                    <div class="company-name">翼鸥教育</div>
-                    <div class="job-title">AI产品经理</div>
-                    <div class="company-meta">
-                        <span>100-499人</span>
-                        <span>B轮</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">15-30K</div>
-                <div class="job-desc">
-                    负责<span class="highlight">教育场景AI产品</span>规划与设计。
-                    涉及语义类AI、机器学习类AI、语音类AI、视觉类AI等产品方向。
-                    <span class="highlight">要求：熟悉B端产品，有AI产品技术经验优先。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">75</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:75%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI教育</span>
-                    <span class="match-tag strategy">B端产品</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/a5044208ebc3a08e0nZ_39m_E1JS.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>考虑</strong><br>
-                        <span class="pros">+ AI教育方向契合</span><br>
-                        <span class="cons">- 薪资偏低</span><br>
-                        <span class="cons">- 规模较小</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 9. 猿辅导 产品运营 -->
-            <div class="job-row">
-                <div class="rank">9</div>
-                <div>
-                    <div class="company-name">猿辅导</div>
-                    <div class="job-title">产品运营（用户增长方向）</div>
-                    <div class="company-meta">
-                        <span class="scale-1k">1000-9999人</span>
-                        <span>已上市</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">15-25K<span><br><small>·14薪</small></span></div>
-                <div class="job-desc">
-                    负责<span class="highlight">用户增长方向</span>的产品运营工作。
-                    通过运营手段提升用户活跃度和转化率。
-                    <span class="highlight">要求：有数据分析能力，用户同理心强。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">72</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:72%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag growth">用户增长</span>
-                    <span class="match-tag strategy">产品运营</span>
-                    <span class="match-tag scale">大厂</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/4ca830d4ad8769a50nZ72Ni_F1pZ.html" class="action-btn" target="_blank">立即投递</a>
-                    <div class="recommendation">
-                        <strong>考虑</strong><br>
-                        <span class="pros">+ 用户增长经验匹配</span><br>
-                        <span class="pros">+ 上市公司稳定</span><br>
-                        <span class="cons">- 非AI核心方向</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 10. 北京许先网 K12产品经理 -->
-            <div class="job-row">
-                <div class="rank">10</div>
-                <div>
-                    <div class="company-name">北京许先网</div>
-                    <div class="job-title">K12产品经理/AI产品经理</div>
-                    <div class="company-meta">
-                        <span>20-99人</span>
-                        <span>未融资</span>
-                    </div>
-                    <div class="active-badge">今日活跃</div>
-                </div>
-                <div class="salary">20-25K</div>
-                <div class="job-desc">
-                    解析教育信息文件，提炼客户高频痛点，制定产品中长期规划。
-                    结合最新的AI技术，运用到公司产品中，提高产品竞争力。
-                    <span class="highlight">要求：5年以上K12工作经验，有To B/C/G产品经验。</span>
-                </div>
-                <div class="score">
-                    <div class="score-value">55</div>
-                    <div class="score-bar"><div class="score-bar-fill" style="width:55%;"></div></div>
-                </div>
-                <div class="match-tags">
-                    <span class="match-tag ai">AI教育</span>
-                    <span class="match-tag strategy">K12产品</span>
-                </div>
-                <div>
-                    <a href="https://www.zhipin.com/job_detail/bf482965d0c185790nd62dy7GFRW.html" class="action-btn" target="_blank">查看详情</a>
-                    <div class="recommendation">
-                        <strong>备选</strong><br>
-                        <span class="cons">- 公司规模<100人</span><br>
-                        <span class="cons">- 需5年经验</span><br>
-                        <span class="cons">- 教育行业非核心</span>
-                    </div>
-                </div>
+            <div id="jobListContainer">
+                <div class="job-loading">正在加载职位数据...</div>
             </div>
         </div>
 
-        <div class="summary-cards">
-            <div class="section-title">求职建议</div>
-            <div class="cards-grid">
-                <div class="summary-card gold">
-                    <h4>🥇 首选推荐</h4>
-                    <p><strong>爱奇艺 AI产品经理</strong> - 与您航旅纵横AI Agent经验高度契合，AIGC创作平台方向完全匹配。</p>
-                    <ul>
-                        <li>建议配合内推，可提升回复率至80%+</li>
-                        <li>强调RAG Agent和航班助手项目经验</li>
-                        <li>突出A/B Test和数据分析能力</li>
-                    </ul>
-                </div>
-                <div class="summary-card gold">
-                    <h4>🥇 强烈推荐</h4>
-                    <p><strong>小红书 智能策略运营</strong> - AI客服Agent方向完全匹��，SQL和数据分析要求与简历一致。</p>
-                    <ul>
-                        <li>突出智能助手项目经验</li>
-                        <li>展示RFM模型和用户画像经验</li>
-                        <li>强调客服解决率提升成果</li>
-                    </ul>
-                </div>
-                <div class="summary-card silver">
-                    <h4>🥈 备选方案</h4>
-                    <p><strong>字节跳动</strong> - 可颂用户增长、番茄策略运营两个岗位都匹配。</p>
-                    <ul>
-                        <li>有飞书实习经历，可走内部推荐</li>
-                        <li>用户增长经验是核心竞争力</li>
-                        <li>建议同时投递增加机会</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="score-rules">
-            <div class="section-title">打分规则说明</div>
-            <table>
-                <tr>
-                    <th style="width:25%;">指标</th>
-                    <th style="width:15%;">权重</th>
-                    <th>评分标准</th>
-                </tr>
-                <tr>
-                    <td><strong>AI相关度</strong></td>
-                    <td>30%</td>
-                    <td>Agent/RAG/大模型 = 30分 | AI产品运营 = 25分 | 其他AI = 20分 | 非AI = 10分</td>
-                </tr>
-                <tr>
-                    <td><strong>简历匹配度</strong></td>
-                    <td>25%</td>
-                    <td>技能关键词重合度、工作经历相关性（航旅/携程/字节/百度）、学历背景（北邮硕士）</td>
-                </tr>
-                <tr>
-                    <td><strong>薪资水平</strong></td>
-                    <td>20%</td>
-                    <td>40k+=20分 | 30-40k=18分 | 20-30k=16分 | 15-20k=14分</td>
-                </tr>
-                <tr>
-                    <td><strong>公司规模</strong></td>
-                    <td>15%</td>
-                    <td>10000人+=15分 | 1000-9999人=12分 | 500-999人=10分 | 100-499人=8分</td>
-                </tr>
-                <tr>
-                    <td><strong>活跃度</strong></td>
-                    <td>10%</td>
-                    <td>今日活跃=10分 | 3天内=8分 | 一周内=6分 | 一个月内=4分</td>
-                </tr>
-            </table>
-        </div>
-
-        <!-- 简历优化模块 -->
         <div class="resume-optimization" id="resumeOptimization">
             <div class="section-title">简历优化方向</div>
-
-            <div class="optimization-intro">
-                <p>基于您选择的岗位要求，为您提供简历优化建议。点击下方按钮开始优化。</p>
+            <div class="tip-card">
+                <h4>💡 优化方向</h4>
+                <ul id="tipsList">
+                    <li>请先选择目标岗位获取优化建议</li>
+                </ul>
             </div>
-
             <div class="target-job-selector">
                 <label>选择目标岗位：</label>
                 <select id="targetJob">
@@ -1074,343 +164,221 @@
                     <option value="jd">京东 - AI产品经理</option>
                 </select>
             </div>
-
-            <div class="optimization-tips" id="optimizationTips">
-                <div class="tip-card">
-                    <h4>💡 优化方向</h4>
-                    <ul id="tipsList">
-                        <li>请先选择目标岗位获取优化建议</li>
-                    </ul>
-                </div>
-            </div>
-
             <div class="optimization-actions">
-                <button class="btn-optimize" id="btnOptimize" onclick="startOptimization()">
-                    ✨ 一键优化简历
-                </button>
-                <button class="btn-export" id="btnExport" onclick="exportPDF()" style="display:none;">
-                    📄 导出PDF
-                </button>
+                <button class="btn-optimize" id="btnOptimize" onclick="startOptimization()">✨ 一键优化简历</button>
+                <button class="btn-optimize" id="btnExport" onclick="exportPDF()" style="display:none; background: #2e7d32;">📄 导出PDF</button>
             </div>
-        </div>
-
-        <!-- 简历编辑器模态框 -->
-        <div class="modal-overlay" id="modalOverlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h3>简历编辑器</h3>
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <div class="resume-editor" id="resumeEditor">
-                        <!-- 简历内容将通过JavaScript动态加载 -->
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn-save" onclick="saveResume()">保存修改</button>
-                    <button class="btn-cancel" onclick="closeModal()">取消</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer">
-            <p>数据来源：Boss直聘实时搜索 | 生成时间：2025年4月9日</p>
-            <p style="margin-top:8px;">提示：所有职位均已验证活跃度，请尽快投递</p>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>简历编辑器</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="resume-editor" id="resumeEditor"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn-save" onclick="saveResume()">保存修改</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // 简历原始数据
         const resumeData = {
-            name: '郑睿',
-            title: 'AI产品运营 / 策略运营',
-            phone: '17355385154',
-            email: '826522322@qq.com',
-            location: '北京',
+            name: '郑睿', title: 'AI产品运营 / 策略运营', phone: '17355385154', email: '826522322@qq.com', location: '北京',
             education: [
                 { school: '北京邮电大学 (211)', degree: '硕士', time: '2021.09 - 2024.06', major: '新闻传播学 · 连续2年一等奖学金' },
                 { school: '安徽师范大学', degree: '本科', time: '2017.09 - 2021.06', major: '网络与新媒体（主修）、汉语言文学（辅修）· GPA 3.93/4.0 (前5%)' }
             ],
             experience: [
-                {
-                    company: '中航信移动科技有限公司 (航旅纵横)',
-                    time: '2024.07 - 至今',
-                    position: 'AI产品经理 / 用车策略运营',
-                    desc: [
-                        'AI Agent构建：主导上线"延误分析"、"机场助手"等 Agent。通过编写测试集、数据标注、badcase分析、收集用户反馈，将民航问题的回答正确率从58→87%。通过Dify平台调优Prompt，搭建工作流，设计产品形态，新增航班延误分析、机场助手、航班动态查询等Agent。从0到1推动"出行助手"功能上线，基于用户行程动态推送配套出行服务，日均流量10w+，通过协调 10+ 业务方对齐字段规则，实现了 AI 助手作为业务导流核心入口的逻辑闭环。',
-                        '数据策略增长：针对有无行程首页、航班详情页、行程详情页入口进行多次AB实验，设计租车、接送机展示逻辑，优化触发时机与视觉形态，使接送机点击率从 0.5% 提升至 1.63%，租车点击率由 0.25% 提升至 1.1%（翻4倍），大幅扩充获客漏斗。',
-                        '运营效能革命和发版上架：自创多维表格AI评测模版和招聘简历分析模板，解决了大规模评测和筛选简历的难题。针对用车结算及客诉痛点，利用Claude code编写结算和客诉处理脚本，实现结算周期从 7 天缩短至 1 天，客诉处理时效缩短 80%；负责航旅纵横app的发版上架，司机端Saas新app的从0到1的上架全流程（ICP备案,域名证书,短信,消息等）。'
-                    ]
-                },
-                {
-                    company: '携程机票事业部 | 用户增长产品经理',
-                    time: '2023.06 - 2024.01',
-                    position: '用户增长产品经理',
-                    desc: [
-                        '校园市场增长：从0到1策划了"校园飞行官"项目，通过用户分层分析筛选核心校园场景，招募校园大使并搭建发布小红书、抖音号的内容规则、内容模版sop和积分体系，联动多部门开展培训、地推拉新和学生认证裂变。应用AI外呼引擎，针对RFM模型分析出的流失老用户进行策略性召回，设计针对学生侧的机票免单抽奖活动，驱动机票老客订单增长961，学生新客增长418，学生新客1500+。'
-                    ]
-                },
-                {
-                    company: '字节跳动 · 飞书 | 企业效能顾问',
-                    time: '2022.09 - 2023.02',
-                    position: '企业效能顾问',
-                    desc: [
-                        '产品心智渗透：支持飞书 People客户回访，根据回访记录，产出 10 份深度行业研报和OKR使用数据复盘。日常制作飞书工具提效的知识卡片，策划"飞书招聘微课"系列视频8期，用剪映制作动画内容，播放量环比增长 120%，提升了B 端客户的活跃留存。'
-                    ]
-                },
-                {
-                    company: '百度新闻与内容运营部 | 产品运营',
-                    time: '2020.11 - 2021.05',
-                    position: '产品运营',
-                    desc: [
-                        '0-1 业务建设与内容运营：参与"领潮计划"冷启动，负责旅游垂类用户画像调研与竞品分析,访谈站内外作者，建立作者引入机制和内容过审/分发标准，优化feed流推荐策略。主导"女神节""清明节"等UGC话题运营，通过"流量现金激励+热点导流+宣传曝光+权益认证"策略驱动 2w+ 用户投稿，创造 700万+ 曝光，沉淀了初期的垂类创作者生态。'
-                    ]
-                }
+                { company: '中航信移动科技有限公司 (航旅纵横)', time: '2024.07 - 至今', position: 'AI产品经理 / 用车策略运营', desc: ['AI Agent构建：主导上线"延误分析"、"机场助手"等 Agent。通过编写测试集、数据标注、badcase分析、收集用户反馈，将民航问题的回答正确率从58→87%。通过Dify平台调优Prompt，搭建工作流，设计产品形态，新增航班延误分析、机场助手、航班动态查询等Agent。从0到1推动"出行助手"功能上线，基于用户行程动态推送配套出行服务，日均流量10w+，通过协调 10+ 业务方对齐字段规则，实现了 AI 助手作为业务导流核心入口的逻辑闭环。', '数据策略增长：针对有无行程首页、航班详情页、行程详情页入口进行多次AB实验，设计租车、接送机展示逻辑，优化触发时机与视觉形态，使接送机点击率从 0.5% 提升至 1.63%，租车点击率由 0.25% 提升至 1.1%（翻4倍），大幅扩充获客漏斗。', '运营效能革命和发版上架：自创多维表格AI评测模版和招聘简历分析模板，解决了大规模评测和筛选简历的难题。针对用车结算及客诉痛点，利用Claude code编写结算和客诉处理脚本，实现结算周期从 7 天缩短至 1 天，客诉处理时效缩短 80%；负责航旅纵横app的发版上架，司机端Saas新app的从0到1的上架全流程。'] },
+                { company: '携程机票事业部 | 用户增长产品经理', time: '2023.06 - 2024.01', position: '用户增长产品经理', desc: ['校园市场增长：从0到1策划了"校园飞行官"项目，通过用户分层分析筛选核心校园场景，招募校园大使并搭建发布小红书、抖音号的内容规则、内容模版sop和积分体系，联动多部门开展培训、地推拉新和学生认证裂变。应用AI外呼引擎，针对RFM模型分析出的流失老用户进行策略性召回，设计针对学生侧的机票免单抽奖活动，驱动机票老客订单增长961，学生新客增长418，学生新客1500+。'] },
+                { company: '字节跳动 · 飞书 | 企业效能顾问', time: '2022.09 - 2023.02', position: '企业效能顾问', desc: ['产品心智渗透：支持飞书 People客户回访，根据回访记录，产出 10 份深度行业研报和OKR使用数据复盘。日常制作飞书工具提效的知识卡片，策划"飞书招聘微课"系列视频8期，用剪映制作动画内容，播放量环比增长 120%，提升了B 端客户的活跃留存。'] },
+                { company: '百度新闻与内容运营部 | 产品运营', time: '2020.11 - 2021.05', position: '产品运营', desc: ['0-1 业务建设与内容运营：参与"领潮计划"冷启动，负责旅游垂类用户画像调研与竞品分析,访谈站内外作者，建立作者引入机制和内容过审/分发标准，优化feed流推荐策略。主导"女神节""清明节"等UGC话题运营，通过"流量现金激励+热点导流+宣传曝光+权益认证"策略驱动 2w+ 用户投稿，创造 700万+ 曝光，沉淀了初期的垂类创作者生态。'] }
             ],
-            projects: [
-                {
-                    name: 'AI 求职辅导 App (创业项目)',
-                    time: '2024.11 - 至今',
-                    role: '产品负责人 / 独立开发者',
-                    desc: [
-                        'AI简历产品开发：利用Claude code和codex进行编程，实现招聘信息抓取-匹配度分析-简历一键优化-投递全流程，独立完成web端的开发并接入大模型和云服务器。',
-                        '求职辅导app设计：负责app整体的产品设计，采用html-to-figma进行UI设计，运营小红书账号，完成60+行业导师、100+学员资源入库；自主开发导师管理后台与学员预约系统前端页面，闭环实现"简历创建→智能匹配导师→预约导师→邮件提醒→反馈评价"全流程。',
-                        '商业化探索：规划导师约课佣金体系及首约免费权益，策划校园讲座活动，目前已和学校达成合作，正进行小范围用户灰度测试。'
-                    ]
-                }
-            ],
+            projects: [{ name: 'AI 求职辅导 App (创业项目)', time: '2024.11 - 至今', role: '产品负责人 / 独立开发者', desc: ['AI简历产品开发：利用Claude code和codex进行编程，实现招聘信息抓取-匹配度分析-简历一键优化-投递全流程，独立完成web端的开发并接入大模型和云服务器。', '求职辅导app设计：负责app整体的产品设计，采用html-to-figma进行UI设计，运营小红书账号，完成60+行业导师、100+学员资源入库；自主开发导师管理后台与学员预约系统前端页面，闭环实现"简历创建→智能匹配导师→预约导师→邮件提醒→反馈评价"全流程。', '商业化探索：规划导师约课佣金体系及首约免费权益，策划校园讲座活动，目前已和学校达成合作，正进行小范围用户灰度测试。'] }],
             skills: ['Prompt工程', 'CoT/Few-shot', 'Vibe coding', 'Agent工作流编排', 'A/B Testing', 'LTV分层运营', 'Dify/Coze', 'Cursor/SQL', 'PRD撰写', 'SOP驱动'],
             awards: ['英语六级', '教师资格证', '计算机二级', '第五届中国数据新闻大赛国家级优秀奖', '互联网+创业大赛银奖']
         };
 
-        // 优化建议数据
         const optimizationData = {
-            iqiyi: {
-                tips: [
-                    '强调AIGC创作平台和Agent相关经验',
-                    '突出影视内容制作流程理解',
-                    '展示AI漫剧、AI真人剧等AIGC内容认知',
-                    '加强Prompt调优和算法协作经验'
-                ],
-                keywords: ['AIGC', 'Agent', '大模型', '内容创作', '算法协作']
-            },
-            xiaohongshu: {
-                tips: [
-                    '突出智能客服和意图识别经验',
-                    '强调SQL数据分析能力',
-                    '展示RFM模型和用户画像经验',
-                    '加强客服解决率提升成果'
-                ],
-                keywords: ['智能客服', '意图识别', 'SQL', 'RFM模型', '大模型应用']
-            },
-            'bytedance-ks': {
-                tips: [
-                    '强调用户增长和DAU提升经验',
-                    '突出激励业务和玩法设计经验',
-                    '展示数据驱动决策能力',
-                    '加强跨团队协作经验'
-                ],
-                keywords: ['用户增长', 'DAU', '激励玩法', '数据驱动', 'A/B Test']
-            },
-            tencent: {
-                tips: [
-                    '强调AI工具使用习惯和产品热情',
-                    '突出元宝/对话功能理解',
-                    '展示大模型能力边界认知',
-                    '加强AI应用搭建经验'
-                ],
-                keywords: ['AI工具', '大模型', '对话产品', 'AI应用', 'Prompt']
-            },
-            jd: {
-                tips: [
-                    '强调电商场景和AI结合经验',
-                    '突出交易链路和导购链路理解',
-                    '展示B端大模型产品落地经验',
-                    '加强跨部门资源协调能力'
-                ],
-                keywords: ['电商AI', '智能获客', '大模型', 'B端产品', '产品路线图']
-            }
+            iqiyi: { tips: ['强调AIGC创作平台和Agent相关经验', '突出影视内容制作流程理解', '展示AI漫剧、AI真人剧等AIGC内容认知', '加强Prompt调优和算法协作经验'], keywords: ['AIGC', 'Agent', '大模型', '内容创作', '算法协作'] },
+            xiaohongshu: { tips: ['突出智能客服和意图识别经验', '强调SQL数据分析能力', '展示RFM模型和用户画像经验', '加强客服解决率提升成果'], keywords: ['智能客服', '意图识别', 'SQL', 'RFM模型', '大模型应用'] },
+            'bytedance-ks': { tips: ['强调用户增长和DAU提升经验', '突出激励业务和玩法设计经验', '展示数据驱动决策能力', '加强跨团队协作经验'], keywords: ['用户增长', 'DAU', '激励玩法', '数据驱动', 'A/B Test'] },
+            tencent: { tips: ['强调AI工具使用习惯和产品热情', '突出元宝/对话功能理解', '展示大模型能力边界认知', '加强AI应用搭建经验'], keywords: ['AI工具', '大模型', '对话产品', 'AI应用', 'Prompt'] },
+            jd: { tips: ['强调电商场景和AI结合经验', '突出交易链路和导购链路理解', '展示B端大模型产品落地经验', '加强跨部门资源协调能力'], keywords: ['电商AI', '智能获客', '大模型', 'B端产品', '产品路线图'] }
         };
 
         let currentTargetJob = '';
         let editedResume = null;
         let hasUnsavedChanges = false;
 
-        // 从localStorage加载保存的简历
         function loadSavedResume() {
             const saved = localStorage.getItem('editedResume_' + currentTargetJob);
-            if (saved) {
-                return JSON.parse(saved);
-            }
+            if (saved) return JSON.parse(saved);
             return null;
         }
 
-        // 保存简历到localStorage
         function saveToLocalStorage() {
             localStorage.setItem('editedResume_' + currentTargetJob, JSON.stringify(editedResume));
         }
 
-        // 选择目标岗位
-        document.getElementById('targetJob').addEventListener('change', function() {
-            currentTargetJob = this.value;
-            const tipsList = document.getElementById('tipsList');
-            const tips = optimizationData[currentTargetJob];
+        // 动态渲染职位列表
+        function renderJobs() {
+            const container = document.getElementById('jobListContainer');
+            if (!container) return;
 
-            if (tips) {
-                tipsList.innerHTML = tips.tips.map(tip => `<li>${tip}</li>`).join('');
-                document.getElementById('btnOptimize').disabled = false;
-            } else {
-                tipsList.innerHTML = '<li>请先选择目标岗位获取优化建议</li>';
-                document.getElementById('btnOptimize').disabled = true;
-            }
-        });
-
-        // 开始优化
-        function startOptimization() {
-            if (!currentTargetJob) {
-                alert('请先选择目标岗位');
+            if (typeof scrapedJobs === 'undefined' || !scrapedJobs || scrapedJobs.length === 0) {
+                container.innerHTML = '<div class="job-loading">暂无可用职位数据</div>';
                 return;
             }
+
+            let html = '';
+            scrapedJobs.forEach((job, index) => {
+                const rank = index + 1;
+                const rankClass = rank <= 2 ? 'gold' : (rank <= 5 ? 'silver' : 'bronze');
+                const score = calculateMatchScore(job);
+
+                html += `
+                    <div class="job-row">
+                        <div class="rank ${rankClass}">${rank}</div>
+                        <div>
+                            <div class="company-name">${job.company || '未知公司'}</div>
+                            <div class="job-title">${job.name || '职位名称'}</div>
+                            <div class="company-meta">${job.area || '北京'}</div>
+                            <div class="active-badge">今日活跃</div>
+                        </div>
+                        <div class="salary">${job.salary || '薪资面议'}</div>
+                        <div class="job-desc">
+                            ${job.skills ? `<span class="highlight">技能：${job.skills}</span><br>` : ''}
+                            <span class="highlight">经验：${job.experience || '不限'}</span><br>
+                            <span class="highlight">学历：${job.degree || '不限'}</span><br>
+                            <span class="highlight">Boss：${job.boss || '未知'}</span>
+                        </div>
+                        <div class="score">
+                            <div class="score-value">${score}</div>
+                            <div class="score-bar"><div class="score-bar-fill" style="width:${score}%;"></div></div>
+                        </div>
+                        <div><a href="${job.url || '#'}" class="action-btn" target="_blank">立即投递</a></div>
+                    </div>
+                `;
+            });
+
+            const updateTime = typeof lastUpdated !== 'undefined' ? lastUpdated : new Date().toLocaleString('zh-CN');
+            html += `<div class="job-updated">📅 数据更新时间：${updateTime}</div>`;
+            container.innerHTML = html;
+            document.getElementById('updateTime').textContent = updateTime;
+        }
+
+        function calculateMatchScore(job) {
+            let score = 60;
+            if (job.name && job.name.toLowerCase().includes('ai')) score += 20;
+            if (job.skills && job.skills.toLowerCase().includes('ai')) score += 10;
+            const resumeSkills = ['Prompt', 'Agent', 'RAG', 'A/B', 'SQL', '数据分析', '用户增长', '产品经理'];
+            if (job.skills) {
+                resumeSkills.forEach(skill => {
+                    if (job.skills.toLowerCase().includes(skill.toLowerCase())) score += 3;
+                });
+            }
+            return Math.min(score, 100);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderJobs();
+            document.getElementById('targetJob').addEventListener('change', function() {
+                currentTargetJob = this.value;
+                const tips = optimizationData[currentTargetJob];
+                const tipsList = document.getElementById('tipsList');
+                if (tips && tips.tips) {
+                    tipsList.innerHTML = tips.tips.map(t => `<li>${t}</li>`).join('');
+                } else {
+                    tipsList.innerHTML = '<li>请先选择目标岗位获取优化建议</li>';
+                }
+            });
+        });
+
+        function startOptimization() {
+            if (!currentTargetJob) { alert('请先选择目标岗位'); return; }
             openModal();
         }
 
-        // 打开模态框
         function openModal() {
             document.getElementById('modalOverlay').style.display = 'flex';
             document.getElementById('btnExport').style.display = 'inline-block';
             renderResumeEditor();
         }
 
-        // 关闭模态框
         function closeModal() {
-            if (hasUnsavedChanges) {
-                if (!confirm('有未保存的修改，确定要关闭吗？')) {
-                    return;
-                }
-            }
+            if (hasUnsavedChanges && !confirm('有未保存的修改，确定要关闭吗？')) return;
             hasUnsavedChanges = false;
             document.getElementById('modalOverlay').style.display = 'none';
         }
 
-        // 获取工作经历对应的优化建议
         function getExpOptimizationTips(company) {
             const tips = optimizationData[currentTargetJob];
             if (!tips) return [];
-
-            // 根据公司名匹配优化建议
             const companyTips = [];
             if (company.includes('航旅纵横') || company.includes('中航信')) {
-                companyTips.push('强调Agent构建和RAG能力');
-                companyTips.push('突出航班助手、延误分析等6+核心功能');
-                companyTips.push('展示回答正确率从58%→87%的成果');
-                companyTips.push('体现10+业务方协调能力');
+                companyTips.push('强调Agent构建和RAG能力', '突出航班助手、延误分析等6+核心功能', '展示回答正确率从58%→87%的成果', '体现10+业务方协调能力');
             } else if (company.includes('携程')) {
-                companyTips.push('强调用户增长1500+的成果');
-                companyTips.push('展示ABtest实验优化经验');
-                companyTips.push('突出RFM模型和用户画像标签体系');
-                companyTips.push('体现校园渠道从0到1搭建经验');
+                companyTips.push('强调用户增长1500+的成果', '展示ABtest实验优化经验', '突出RFM模型和用户画像标签体系', '体现校园渠道从0到1搭建经验');
             } else if (company.includes('字节') || company.includes('飞书')) {
-                companyTips.push('展示企业效能顾问经验');
-                companyTips.push('强调OKR和数据简报制作能力');
-                companyTips.push('突出B端客户活跃留存提升');
+                companyTips.push('展示企业效能顾问经验', '强调OKR和数据简报制作能力', '突出B端客户活跃留存提升');
             } else if (company.includes('百度')) {
-                companyTips.push('强调从0到1建设经验');
-                companyTips.push('突出2w+用户投稿、700万+曝光');
-                companyTips.push('体现垂类创作者生态搭建');
-            } else if (company.includes('求职辅导') || company.includes('创业')) {
-                companyTips.push('体现独立开发能力和AI工具使用');
-                companyTips.push('突出产品+运营+技术全链路经验');
-                companyTips.push('展示商业化探索思维');
+                companyTips.push('强调从0到1建设经验', '突出2w+用户投稿、700万+曝光', '体现垂类创作者生态搭建');
             }
-
             return companyTips;
         }
 
-        // 渲染简历编辑器
         function renderResumeEditor() {
             const tips = optimizationData[currentTargetJob];
             const keywords = tips ? tips.keywords : [];
             const overallTips = tips ? tips.tips : [];
-
             const editor = document.getElementById('resumeEditor');
-
-            // 尝试加载保存的简历，否则使用原始数据
             const savedResume = loadSavedResume();
             editedResume = savedResume ? JSON.parse(JSON.stringify(savedResume)) : JSON.parse(JSON.stringify(resumeData));
 
             let html = `
                 <div class="optimization-header">
                     <h4>✨ 针对【${document.getElementById('targetJob').selectedOptions[0].text}】的优化建议</h4>
-                    <ul class="overall-tips">
-                        ${overallTips.map(tip => `<li>${tip}</li>`).join('')}
-                    </ul>
+                    <ul class="overall-tips">${overallTips.map(tip => `<li>${tip}</li>`).join('')}</ul>
                 </div>
-
                 <div class="editor-section">
                     <h4>基本信息</h4>
-                    <div class="edit-group">
-                        <label>姓名：</label>
-                        <input type="text" id="edit_name" value="${editedResume.name}" onchange="hasUnsavedChanges=true">
-                    </div>
-                    <div class="edit-group">
-                        <label>职位：</label>
-                        <input type="text" id="edit_title" value="${editedResume.title}" onchange="hasUnsavedChanges=true">
-                    </div>
+                    <div class="edit-group"><label>姓名：</label><input type="text" id="edit_name" value="${editedResume.name}" onchange="hasUnsavedChanges=true"></div>
+                    <div class="edit-group"><label>职位：</label><input type="text" id="edit_title" value="${editedResume.title}" onchange="hasUnsavedChanges=true"></div>
                 </div>
-
                 <div class="editor-section">
-                    <div class="section-header">
-                        <h4>工作经历 <span class="keyword-hint">关键词：${keywords.join(' / ')}</span></h4>
-                        <button class="btn-add-exp" onclick="addExperience()">➕ 添加工作经历</button>
-                    </div>
+                    <div class="section-header"><h4>工作经历 <span class="keyword-hint">关键词：${keywords.join(' / ')}</span></h4><button class="btn-add-exp" onclick="addExperience()">➕ 添加工作经历</button></div>
             `;
 
             editedResume.experience.forEach((exp, i) => {
                 const expTips = getExpOptimizationTips(exp.company);
                 html += `
                     <div class="exp-editor" id="exp_${i}">
-                        <div class="exp-tips-banner">
-                            <span class="exp-tips-label">💡 优化建议：</span>
-                            <span class="exp-tips-content">${expTips.length > 0 ? expTips.join(' | ') : '暂无特定建议'}</span>
-                        </div>
+                        <div class="exp-tips-banner"><span class="exp-tips-label">💡 优化建议：</span><span class="exp-tips-content">${expTips.length > 0 ? expTips.join(' | ') : '暂无特定建议'}</span></div>
                         <div class="exp-actions">
                             <button class="btn-move" onclick="moveExperience(${i}, -1)" title="上移" ${i === 0 ? 'disabled' : ''}>⬆️</button>
                             <button class="btn-move" onclick="moveExperience(${i}, 1)" title="下移" ${i === editedResume.experience.length - 1 ? 'disabled' : ''}>⬇️</button>
                             <button class="btn-delete" onclick="deleteExperience(${i})">🗑️ 删除</button>
                         </div>
+                        <div class="edit-group"><label>公司：</label><input type="text" id="edit_exp_${i}_company" value="${exp.company}" onchange="hasUnsavedChanges=true"></div>
+                        <div class="edit-group"><label>职位：</label><input type="text" id="edit_exp_${i}_position" value="${exp.position}" onchange="hasUnsavedChanges=true"></div>
+                        <div class="edit-group"><label>时间：</label><input type="text" id="edit_exp_${i}_time" value="${exp.time}" onchange="hasUnsavedChanges=true"></div>
                         <div class="edit-group">
-                            <label>公司：</label>
-                            <input type="text" id="edit_exp_${i}_company" value="${exp.company}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <label>职位：</label>
-                            <input type="text" id="edit_exp_${i}_position" value="${exp.position}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <label>时间：</label>
-                            <input type="text" id="edit_exp_${i}_time" value="${exp.time}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <div class="textarea-toolbar">
-                                <label>工作描述：</label>
-                                <button class="btn-bold" onclick="boldText('edit_exp_${i}_desc')" title="加粗">𝐁</button>
-                            </div>
+                            <div class="textarea-toolbar"><label>工作描述：</label><button class="btn-bold" onclick="boldText('edit_exp_${i}_desc')" title="加粗">𝐁</button></div>
                             <textarea id="edit_exp_${i}_desc" rows="6" onchange="hasUnsavedChanges=true">${exp.desc.join('\n')}</textarea>
                         </div>
                     </div>
                 `;
             });
 
-            html += `
-                </div>
-
-                <div class="editor-section">
-                    <div class="section-header">
-                        <h4>项目经历</h4>
-                        <button class="btn-add-exp" onclick="addProject()">➕ 添加项目</button>
-                    </div>
-            `;
+            html += `</div><div class="editor-section"><div class="section-header"><h4>项目经历</h4><button class="btn-add-exp" onclick="addProject()">➕ 添加项目</button></div>`;
 
             editedResume.projects.forEach((proj, i) => {
                 html += `
@@ -1420,790 +388,65 @@
                             <button class="btn-move" onclick="moveProject(${i}, 1)" title="下移" ${i === editedResume.projects.length - 1 ? 'disabled' : ''}>⬇️</button>
                             <button class="btn-delete" onclick="deleteProject(${i})">🗑️ 删除</button>
                         </div>
+                        <div class="edit-group"><label>项目名称：</label><input type="text" id="edit_proj_${i}_name" value="${proj.name}" onchange="hasUnsavedChanges=true"></div>
+                        <div class="edit-group"><label>时间：</label><input type="text" id="edit_proj_${i}_time" value="${proj.time}" onchange="hasUnsavedChanges=true"></div>
+                        <div class="edit-group"><label>职责/角色：</label><input type="text" id="edit_proj_${i}_role" value="${proj.role}" onchange="hasUnsavedChanges=true"></div>
                         <div class="edit-group">
-                            <label>项目名称：</label>
-                            <input type="text" id="edit_proj_${i}_name" value="${proj.name}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <label>时间：</label>
-                            <input type="text" id="edit_proj_${i}_time" value="${proj.time}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <label>职责/角色：</label>
-                            <input type="text" id="edit_proj_${i}_role" value="${proj.role}" onchange="hasUnsavedChanges=true">
-                        </div>
-                        <div class="edit-group">
-                            <div class="textarea-toolbar">
-                                <label>项目描述：</label>
-                                <button class="btn-bold" onclick="boldText('edit_proj_${i}_desc')" title="加粗">𝐁</button>
-                            </div>
+                            <div class="textarea-toolbar"><label>项目描述：</label><button class="btn-bold" onclick="boldText('edit_proj_${i}_desc')" title="加粗">𝐁</button></div>
                             <textarea id="edit_proj_${i}_desc" rows="6" onchange="hasUnsavedChanges=true">${proj.desc.join('\n')}</textarea>
                         </div>
                     </div>
                 `;
             });
 
-            html += `
-                </div>
-
-                <div class="editor-section">
-                    <h4>核心技能 <span class="keyword-hint">建议添加：${keywords.slice(0, 3).join(', ')}</span></h4>
-                    <div class="edit-group">
-                        <label>技能（逗号分隔）：</label>
-                        <input type="text" id="edit_skills" value="${editedResume.skills.join(', ')}" onchange="hasUnsavedChanges=true">
-                    </div>
-                </div>
-            `;
-
+            html += `</div><div class="editor-section"><h4>核心技能 <span class="keyword-hint">建议添加：${keywords.slice(0, 3).join(', ')}</span></h4><div class="edit-group"><label>技能（逗号分隔）：</label><input type="text" id="edit_skills" value="${editedResume.skills.join(', ')}" onchange="hasUnsavedChanges=true"></div></div>`;
             editor.innerHTML = html;
             hasUnsavedChanges = false;
         }
 
-        // 加粗选中文本（使用**包围）
         function boldText(textareaId) {
             const textarea = document.getElementById(textareaId);
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const text = textarea.value;
-            const selected = text.substring(start, end);
-
+            const start = textarea.selectionStart, end = textarea.selectionEnd;
+            const text = textarea.value, selected = text.substring(start, end);
             if (selected) {
-                const newText = text.substring(0, start) + '**' + selected + '**' + text.substring(end);
-                textarea.value = newText;
-                // 选中新添加的**
+                textarea.value = text.substring(0, start) + '**' + selected + '**' + text.substring(end);
                 textarea.setSelectionRange(start + 2, start + 2 + selected.length);
-                textarea.focus();
-                hasUnsavedChanges = true;
             } else {
-                // 如果没有选中文本，在光标位置插入**
-                const newText = text.substring(0, start) + '****' + text.substring(end);
-                textarea.value = newText;
+                textarea.value = text.substring(0, start) + '****' + text.substring(end);
                 textarea.setSelectionRange(start + 2, start + 2);
-                textarea.focus();
-                hasUnsavedChanges = true;
             }
-        }
-
-        // 删除工作经历
-        function deleteExperience(index) {
-            if (!confirm('确定要删除这段工作经历吗？')) return;
-            editedResume.experience.splice(index, 1);
+            textarea.focus();
             hasUnsavedChanges = true;
-            renderResumeEditor();
         }
 
-        // 移动工作经历
-        function moveExperience(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= editedResume.experience.length) return;
+        function deleteExperience(index) { if (!confirm('确定要删除这段工作经历吗？')) return; editedResume.experience.splice(index, 1); hasUnsavedChanges = true; renderResumeEditor(); }
+        function moveExperience(index, direction) { const newIndex = index + direction; if (newIndex < 0 || newIndex >= editedResume.experience.length) return; const temp = editedResume.experience[index]; editedResume.experience[index] = editedResume.experience[newIndex]; editedResume.experience[newIndex] = temp; hasUnsavedChanges = true; renderResumeEditor(); }
+        function addExperience() { editedResume.experience.push({ company: '新公司名称', time: '2024.01 - 至今', position: '职位名称', desc: ['描述1', '描述2'] }); hasUnsavedChanges = true; renderResumeEditor(); }
+        function deleteProject(index) { if (!confirm('确定要删除这个项目吗？')) return; editedResume.projects.splice(index, 1); hasUnsavedChanges = true; renderResumeEditor(); }
+        function moveProject(index, direction) { const newIndex = index + direction; if (newIndex < 0 || newIndex >= editedResume.projects.length) return; const temp = editedResume.projects[index]; editedResume.projects[index] = editedResume.projects[newIndex]; editedResume.projects[newIndex] = temp; hasUnsavedChanges = true; renderResumeEditor(); }
+        function addProject() { editedResume.projects.push({ name: '新项目名称', time: '2024.01 - 至今', role: '角色/职责', desc: ['描述1', '描述2'] }); hasUnsavedChanges = true; renderResumeEditor(); }
 
-            const temp = editedResume.experience[index];
-            editedResume.experience[index] = editedResume.experience[newIndex];
-            editedResume.experience[newIndex] = temp;
-            hasUnsavedChanges = true;
-            renderResumeEditor();
-        }
-
-        // 添加新工作经历
-        function addExperience() {
-            editedResume.experience.push({
-                company: '新公司名称',
-                time: '2024.01 - 至今',
-                position: '职位名称',
-                desc: ['描述1', '描述2']
-            });
-            hasUnsavedChanges = true;
-            renderResumeEditor();
-        }
-
-        // 删除项目经历
-        function deleteProject(index) {
-            if (!confirm('确定要删除这个项目吗？')) return;
-            editedResume.projects.splice(index, 1);
-            hasUnsavedChanges = true;
-            renderResumeEditor();
-        }
-
-        // 移动项目经历
-        function moveProject(index, direction) {
-            const newIndex = index + direction;
-            if (newIndex < 0 || newIndex >= editedResume.projects.length) return;
-
-            const temp = editedResume.projects[index];
-            editedResume.projects[index] = editedResume.projects[newIndex];
-            editedResume.projects[newIndex] = temp;
-            hasUnsavedChanges = true;
-            renderResumeEditor();
-        }
-
-        // 添加新项目经历
-        function addProject() {
-            editedResume.projects.push({
-                name: '新项目名称',
-                time: '2024.01 - 至今',
-                role: '角色/职责',
-                desc: ['描述1', '描述2']
-            });
-            hasUnsavedChanges = true;
-            renderResumeEditor();
-        }
-
-        // 保存修改
         function saveResume() {
             if (!editedResume) return;
-
-            // 收集所有修改
             editedResume.name = document.getElementById('edit_name').value;
             editedResume.title = document.getElementById('edit_title').value;
-
-            editedResume.experience.forEach((exp, i) => {
-                exp.company = document.getElementById(`edit_exp_${i}_company`).value;
-                exp.position = document.getElementById(`edit_exp_${i}_position`).value;
-                exp.time = document.getElementById(`edit_exp_${i}_time`).value;
-                exp.desc = document.getElementById(`edit_exp_${i}_desc`).value.split('\n').filter(d => d.trim());
-            });
-
-            editedResume.projects.forEach((proj, i) => {
-                proj.name = document.getElementById(`edit_proj_${i}_name`).value;
-                proj.time = document.getElementById(`edit_proj_${i}_time`).value;
-                proj.role = document.getElementById(`edit_proj_${i}_role`).value;
-                proj.desc = document.getElementById(`edit_proj_${i}_desc`).value.split('\n').filter(d => d.trim());
-            });
-
+            editedResume.experience.forEach((exp, i) => { exp.company = document.getElementById(`edit_exp_${i}_company`).value; exp.position = document.getElementById(`edit_exp_${i}_position`).value; exp.time = document.getElementById(`edit_exp_${i}_time`).value; exp.desc = document.getElementById(`edit_exp_${i}_desc`).value.split('\n').filter(d => d.trim()); });
+            editedResume.projects.forEach((proj, i) => { proj.name = document.getElementById(`edit_proj_${i}_name`).value; proj.time = document.getElementById(`edit_proj_${i}_time`).value; proj.role = document.getElementById(`edit_proj_${i}_role`).value; proj.desc = document.getElementById(`edit_proj_${i}_desc`).value.split('\n').filter(d => d.trim()); });
             editedResume.skills = document.getElementById('edit_skills').value.split(',').map(s => s.trim()).filter(s => s);
-
-            // 保存到localStorage
             saveToLocalStorage();
             hasUnsavedChanges = false;
-
             alert('简历已保存！点击"导出PDF"下载优化后的简历。');
         }
 
-        // 导出PDF - 生成干净HTML并在新窗口打开
         function exportPDF() {
-            if (!editedResume) {
-                alert('请先点击"保存修改"');
-                return;
-            }
-
-            // 转换 **加粗** 为 <strong>加粗</strong>
-            function toBold(text) {
-                return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            }
-
-            // 生成专业简历HTML（仿原简历样式）
-            const resumeHTML = `<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <title>${editedResume.name}_简历</title>
-    <style>
-        @page {
-            size: A4;
-            margin: 0;
-        }
-        body {
-            font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            line-height: 1.35;
-            color: #222;
-            margin: 0;
-            padding: 20px;
-            background: #f0f0f0;
-        }
-        .page {
-            max-width: 850px;
-            margin: 0 auto;
-            background: white;
-            padding: 25px 35px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            min-height: 1050px;
-        }
-        .header {
-            border-bottom: 1.5px solid #2f6a37;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 24px;
-            letter-spacing: 4px;
-        }
-        .contact {
-            margin-top: 5px;
-            font-size: 12px;
-            color: #555;
-        }
-        .section-title {
-            background: #f4f4f4;
-            padding: 3px 10px;
-            font-weight: bold;
-            font-size: 14px;
-            color: #2f6a37;
-            margin: 12px 0 8px 0;
-            border-left: 4px solid #2f6a37;
-        }
-        .item { margin-bottom: 10px; }
-        .item-header {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            font-size: 13.5px;
-            margin-bottom: 3px;
-        }
-        .item-sub {
-            font-size: 12.5px;
-            color: #444;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-        ul {
-            margin: 0;
-            padding-left: 16px;
-            font-size: 12px;
-            color: #333;
-        }
-        li {
-            margin-bottom: 3px;
-            text-align: justify;
-        }
-        .data-tag { color: #2f6a37; font-weight: bold; }
-        .skills-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5px 15px;
-            font-size: 12px;
-            padding: 0 10px;
-        }
-        .edu-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12.5px;
-            margin-bottom: 3px;
-        }
-        @media print {
-            body { background: white; padding: 0; }
-            .page { box-shadow: none; padding: 20px 30px; }
-        }
-    </style>
-</head>
-<body>
-<div class="page">
-    <div class="header">
-        <h1>${editedResume.name}</h1>
-        <div class="contact">
-            电话：${editedResume.phone} | 邮箱：${editedResume.email} | ${editedResume.location} | 211硕 | 2年工作经历
-        </div>
-    </div>
-
-    <div class="section-title">教育背景</div>
-    ${editedResume.education.map(edu => `
-    <div class="edu-info">
-        <span><strong>${edu.school}</strong> · ${edu.major} · ${edu.degree}</span>
-        <span>${edu.time}</span>
-    </div>
-    `).join('')}
-
-    <div class="section-title">核心技能</div>
-    <div class="skills-grid">
-        ${editedResume.skills.map(s => `<div>• <strong>${s}</strong></div>`).join('')}
-    </div>
-
-    <div class="section-title">工作经历</div>
-    ${editedResume.experience.map(exp => `
-    <div class="item">
-        <div class="item-header">
-            <span>${exp.company}</span>
-            <span>${exp.time}</span>
-        </div>
-        <div class="item-sub">${exp.position}</div>
-        <ul>
-            ${exp.desc.map(d => `<li>${toBold(d)}</li>`).join('')}
-        </ul>
-    </div>
-    `).join('')}
-
-    <div class="section-title">项目经历</div>
-    ${editedResume.projects.map(proj => `
-    <div class="item">
-        <div class="item-header">
-            <span>${proj.name}</span>
-            <span>${proj.time}</span>
-        </div>
-        <div class="item-sub">${proj.role}</div>
-        <ul>
-            ${proj.desc.map(d => `<li>${toBold(d)}</li>`).join('')}
-        </ul>
-    </div>
-    `).join('')}
-</div>
-<script>
-window.onload = function() {
-    setTimeout(function() {
-        window.print();
-    }, 300);
-};
-<\/script>
-</body>
-</html>`;
-
-            // 在新窗口打开HTML
+            if (!editedResume) { alert('请先点击"保存修改"'); return; }
+            function toBold(text) { return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+            const resumeHTML = `<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><title>${editedResume.name}_简历</title><style>body{font-family:"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.35;color:#222;padding:20px;}.header{text-align:center;border-bottom:2px solid #2f6a37;padding-bottom:10px;margin-bottom:15px;}.header h1{font-size:22px;letter-spacing:3px;}.contact{font-size:12px;color:#555;}.section-title{background:#f4f4f4;padding:3px 10px;font-weight:bold;font-size:14px;color:#2f6a37;margin:12px 0 8px 0;border-left:4px solid #2f6a37;}.item{margin-bottom:10px;}.item-header{display:flex;justify-content:space-between;font-weight:bold;font-size:13px;margin-bottom:3px;}.item-sub{font-size:12px;color:#444;margin-bottom:4px;font-weight:600;}ul{margin:0;padding-left:16px;font-size:12px;}li{margin-bottom:3px;}.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px 15px;font-size:12px;padding:0 10px;}@media print{body{padding:0;}}</style></head><body><div class="header"><h1>${editedResume.name}</h1><div class="contact">电话：${editedResume.phone} | 邮箱：${editedResume.email} | ${editedResume.location} | 211硕 | 2年工作经历</div></div><div class="section-title">教育背景</div>${editedResume.education.map(edu => `<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;"><span><strong>${edu.school}</strong> · ${edu.major} · ${edu.degree}</span><span>${edu.time}</span></div>`).join('')}<div class="section-title">核心技能</div><div class="skills-grid">${editedResume.skills.map(s => `<div>• <strong>${s}</strong></div>`).join('')}</div><div class="section-title">工作经历</div>${editedResume.experience.map(exp => `<div class="item"><div class="item-header"><span>${exp.company}</span><span>${exp.time}</span></div><div class="item-sub">${exp.position}</div><ul>${exp.desc.map(d => `<li>${toBold(d)}</li>`).join('')}</ul></div>`).join('')}<div class="section-title">项目经历</div>${editedResume.projects.map(proj => `<div class="item"><div class="item-header"><span>${proj.name}</span><span>${proj.time}</span></div><div class="item-sub">${proj.role}</div><ul>${proj.desc.map(d => `<li>${toBold(d)}</li>`).join('')}</ul></div>`).join('')}</body></html>`;
             const printWindow = window.open('', '_blank');
-            if (printWindow) {
-                printWindow.document.write(resumeHTML);
-                printWindow.document.close();
-            } else {
-                alert('请允许弹出窗口以便导出PDF');
-            }
+            if (printWindow) { printWindow.document.write(resumeHTML); printWindow.document.close(); } else { alert('请允许弹出窗口以便导出PDF'); }
         }
 
-        // 点击模态框外部关闭
-        document.getElementById('modalOverlay').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
+        document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
     </script>
-
-    <style>
-        .resume-optimization {
-            background: rgba(255,255,255,0.95);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .optimization-intro {
-            color: #666;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
-        .target-job-selector {
-            margin-bottom: 20px;
-        }
-
-        .target-job-selector label {
-            font-size: 14px;
-            color: #1a1a2e;
-            font-weight: 500;
-            margin-right: 10px;
-        }
-
-        .target-job-selector select {
-            padding: 10px 16px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            min-width: 280px;
-            cursor: pointer;
-        }
-
-        .target-job-selector select:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .optimization-tips {
-            margin-bottom: 25px;
-        }
-
-        .tip-card {
-            background: linear-gradient(135deg, #667eea08 0%, #764ba208 100%);
-            border: 1px solid #667eea22;
-            border-radius: 12px;
-            padding: 20px;
-        }
-
-        .tip-card h4 {
-            font-size: 16px;
-            color: #1a1a2e;
-            margin-bottom: 12px;
-        }
-
-        .tip-card ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .tip-card ul li {
-            padding: 8px 0;
-            font-size: 14px;
-            color: #555;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .tip-card ul li:last-child {
-            border-bottom: none;
-        }
-
-        .tip-card ul li::before {
-            content: '✓';
-            color: #667eea;
-            font-weight: bold;
-        }
-
-        .optimization-actions {
-            display: flex;
-            gap: 15px;
-        }
-
-        .btn-optimize, .btn-export {
-            padding: 14px 28px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-optimize {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-optimize:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-optimize:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-export {
-            background: #2e7d32;
-            color: white;
-            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
-        }
-
-        .btn-export:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(46, 125, 50, 0.4);
-        }
-
-        /* 模态框样式 */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 1000;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 40px 20px;
-            overflow-y: auto;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 16px;
-            width: 100%;
-            max-width: 900px;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 30px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .modal-header h3 {
-            font-size: 18px;
-            color: #1a1a2e;
-        }
-
-        .modal-close {
-            width: 32px;
-            height: 32px;
-            border: none;
-            background: #f0f0f0;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            color: #666;
-            transition: all 0.2s;
-        }
-
-        .modal-close:hover {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        .modal-body {
-            padding: 30px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-            padding: 20px 30px;
-            border-top: 1px solid #eee;
-        }
-
-        .btn-save, .btn-cancel {
-            padding: 10px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-
-        .btn-save:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-
-        .btn-cancel {
-            background: #f0f0f0;
-            color: #666;
-        }
-
-        .btn-cancel:hover {
-            background: #e0e0e0;
-        }
-
-        /* 简历编辑器样式 */
-        .resume-editor {
-            font-size: 14px;
-        }
-
-        .optimization-header {
-            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
-            border: 1px solid #667eea33;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-
-        .optimization-header h4 {
-            font-size: 16px;
-            color: #4361ee;
-            margin-bottom: 12px;
-        }
-
-        .overall-tips {
-            margin: 0;
-            padding-left: 20px;
-        }
-
-        .overall-tips li {
-            padding: 5px 0;
-            color: #555;
-            font-size: 13px;
-        }
-
-        .editor-section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .editor-section:last-child {
-            border-bottom: none;
-        }
-
-        .editor-section h4 {
-            font-size: 16px;
-            color: #1a1a2e;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .keyword-hint {
-            font-size: 12px;
-            color: #667eea;
-            font-weight: normal;
-            background: #f0f4ff;
-            padding: 4px 10px;
-            border-radius: 12px;
-        }
-
-        .exp-editor {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            position: relative;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .section-header h4 {
-            margin: 0;
-        }
-
-        .exp-actions {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .btn-move, .btn-delete, .btn-add-exp {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-move {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .btn-move:hover:not(:disabled) {
-            background: #1976d2;
-            color: white;
-        }
-
-        .btn-move:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
-
-        .btn-delete {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .btn-delete:hover {
-            background: #c62828;
-            color: white;
-        }
-
-        .btn-add-exp {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
-        }
-
-        .btn-add-exp:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .textarea-toolbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .textarea-toolbar label {
-            display: block;
-            font-size: 13px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        .btn-bold {
-            padding: 4px 10px;
-            background: #fff3e0;
-            border: 1px solid #ffcc80;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #e65100;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-bold:hover {
-            background: #ffcc80;
-            color: #fff;
-        }
-
-        .exp-tips-banner {
-            background: linear-gradient(135deg, #ffd70015 0%, #ffed4a15 100%);
-            border: 1px solid #ffd70055;
-            border-radius: 8px;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-            font-size: 12px;
-        }
-
-        .exp-tips-label {
-            color: #b8860b;
-            font-weight: 600;
-        }
-
-        .exp-tips-content {
-            color: #856404;
-        }
-
-        .edit-group {
-            margin-bottom: 12px;
-        }
-
-        .edit-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .edit-group label {
-            display: block;
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-
-        .edit-group input,
-        .edit-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: border-color 0.2s;
-        }
-
-        .edit-group input:focus,
-        .edit-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .edit-group textarea {
-            resize: vertical;
-            min-height: 100px;
-            line-height: 1.6;
-        }
-    </style>
 </body>
 </html>
