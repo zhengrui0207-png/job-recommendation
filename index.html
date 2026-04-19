@@ -1358,16 +1358,24 @@
                 </div>
 
                 <div class="editor-section">
-                    <h4>工作经历 <span class="keyword-hint">关键词：${keywords.join(' / ')}</span></h4>
+                    <div class="section-header">
+                        <h4>工作经历 <span class="keyword-hint">关键词：${keywords.join(' / ')}</span></h4>
+                        <button class="btn-add-exp" onclick="addExperience()">➕ 添加工作经历</button>
+                    </div>
             `;
 
             editedResume.experience.forEach((exp, i) => {
                 const expTips = getExpOptimizationTips(exp.company);
                 html += `
-                    <div class="exp-editor">
+                    <div class="exp-editor" id="exp_${i}">
                         <div class="exp-tips-banner">
                             <span class="exp-tips-label">💡 优化建议：</span>
                             <span class="exp-tips-content">${expTips.length > 0 ? expTips.join(' | ') : '暂无特定建议'}</span>
+                        </div>
+                        <div class="exp-actions">
+                            <button class="btn-move" onclick="moveExperience(${i}, -1)" title="上移" ${i === 0 ? 'disabled' : ''}>⬆️</button>
+                            <button class="btn-move" onclick="moveExperience(${i}, 1)" title="下移" ${i === editedResume.experience.length - 1 ? 'disabled' : ''}>⬇️</button>
+                            <button class="btn-delete" onclick="deleteExperience(${i})">🗑️ 删除</button>
                         </div>
                         <div class="edit-group">
                             <label>公司：</label>
@@ -1382,7 +1390,10 @@
                             <input type="text" id="edit_exp_${i}_time" value="${exp.time}" onchange="hasUnsavedChanges=true">
                         </div>
                         <div class="edit-group">
-                            <label>工作描述（每行一条，可根据上方建议优化）：</label>
+                            <div class="textarea-toolbar">
+                                <label>工作描述：</label>
+                                <button class="btn-bold" onclick="boldText('edit_exp_${i}_desc')" title="加粗">𝐁</button>
+                            </div>
                             <textarea id="edit_exp_${i}_desc" rows="6" onchange="hasUnsavedChanges=true">${exp.desc.join('\n')}</textarea>
                         </div>
                     </div>
@@ -1402,6 +1413,63 @@
 
             editor.innerHTML = html;
             hasUnsavedChanges = false;
+        }
+
+        // 加粗选中文本（使用**包围）
+        function boldText(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const selected = text.substring(start, end);
+
+            if (selected) {
+                const newText = text.substring(0, start) + '**' + selected + '**' + text.substring(end);
+                textarea.value = newText;
+                // 选中新添加的**
+                textarea.setSelectionRange(start + 2, start + 2 + selected.length);
+                textarea.focus();
+                hasUnsavedChanges = true;
+            } else {
+                // 如果没有选中文本，在光标位置插入**
+                const newText = text.substring(0, start) + '****' + text.substring(end);
+                textarea.value = newText;
+                textarea.setSelectionRange(start + 2, start + 2);
+                textarea.focus();
+                hasUnsavedChanges = true;
+            }
+        }
+
+        // 删除工作经历
+        function deleteExperience(index) {
+            if (!confirm('确定要删除这段工作经历吗？')) return;
+            editedResume.experience.splice(index, 1);
+            hasUnsavedChanges = true;
+            renderResumeEditor();
+        }
+
+        // 移动工作经历
+        function moveExperience(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= editedResume.experience.length) return;
+
+            const temp = editedResume.experience[index];
+            editedResume.experience[index] = editedResume.experience[newIndex];
+            editedResume.experience[newIndex] = temp;
+            hasUnsavedChanges = true;
+            renderResumeEditor();
+        }
+
+        // 添加新工作经历
+        function addExperience() {
+            editedResume.experience.push({
+                company: '新公司名称',
+                time: '2024.01 - 至今',
+                position: '职位名称',
+                desc: ['描述1', '描述2']
+            });
+            hasUnsavedChanges = true;
+            renderResumeEditor();
         }
 
         // 保存修改
@@ -1433,6 +1501,11 @@
             if (!editedResume) {
                 alert('请先点击"保存修改"');
                 return;
+            }
+
+            // 转换 **加粗** 为 <strong>加粗</strong>
+            function toBold(text) {
+                return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
             }
 
             // 生成专业简历HTML（仿原简历样式）
@@ -1562,7 +1635,7 @@
         </div>
         <div class="item-sub">${exp.position}</div>
         <ul>
-            ${exp.desc.map(d => `<li>${d}</li>`).join('')}
+            ${exp.desc.map(d => `<li>${toBold(d)}</li>`).join('')}
         </ul>
     </div>
     `).join('')}
@@ -1896,6 +1969,99 @@ window.onload = function() {
             border-radius: 10px;
             margin-bottom: 15px;
             position: relative;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .section-header h4 {
+            margin: 0;
+        }
+
+        .exp-actions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-move, .btn-delete, .btn-add-exp {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-move {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .btn-move:hover:not(:disabled) {
+            background: #1976d2;
+            color: white;
+        }
+
+        .btn-move:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-delete {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .btn-delete:hover {
+            background: #c62828;
+            color: white;
+        }
+
+        .btn-add-exp {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        .btn-add-exp:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .textarea-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .textarea-toolbar label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .btn-bold {
+            padding: 4px 10px;
+            background: #fff3e0;
+            border: 1px solid #ffcc80;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #e65100;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-bold:hover {
+            background: #ffcc80;
+            color: #fff;
         }
 
         .exp-tips-banner {
