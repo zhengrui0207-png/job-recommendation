@@ -103,6 +103,13 @@
         .keyword-hint { font-size: 12px; color: #667eea; font-weight: normal; margin-left: 10px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .section-header h4 { margin: 0; }
+        .job-selector-list { background: #f8f9fa; border-radius: 12px; padding: 15px; margin-bottom: 20px; }
+        .selector-list-header { font-size: 13px; color: #666; margin-bottom: 10px; font-weight: 500; }
+        .selector-list-content { display: flex; flex-wrap: wrap; gap: 10px; }
+        .job-select-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: white; border: 1px solid #ddd; border-radius: 20px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+        .job-select-btn:hover { border-color: #667eea; background: #667eea08; }
+        .job-select-btn.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: transparent; }
+        .job-select-btn .job-score { font-size: 11px; opacity: 0.8; }
     </style>
 </head>
 <body>
@@ -150,11 +157,19 @@
             <div class="tip-card">
                 <h4>💡 AI 优化建议</h4>
                 <ul id="tipsList">
-                    <li>请从上方推荐列表选择目标岗位，获取AI优化建议</li>
+                    <li>请从下方推荐列表选择目标岗位，获取AI优化建议</li>
                 </ul>
             </div>
+
+            <div class="job-selector-list" id="jobSelectorList">
+                <div class="selector-list-header">点击选择目标岗位：</div>
+                <div class="selector-list-content" id="selectorListContent">
+                    <!-- 动态生成可点击的岗位列表 -->
+                </div>
+            </div>
+
             <div class="target-job-selector">
-                <label>选择目标岗位：</label>
+                <label>或从下拉框选择：</label>
                 <select id="targetJob">
                     <option value="">-- 从推荐职位中选择 --</option>
                 </select>
@@ -274,16 +289,48 @@
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
 
-            // 动态填充目标岗位下拉框
+            // 动态填充目标岗位下拉框和可点击列表
             const targetJobSelect = document.getElementById('targetJob');
+            const selectorListContent = document.getElementById('selectorListContent');
             targetJobSelect.innerHTML = '<option value="">-- 从推荐职位中选择 --</option>';
+            selectorListContent.innerHTML = '';
             sortedJobs.forEach((job, index) => {
+                // 填充下拉框
                 const option = document.createElement('option');
-                option.value = job._originalIndex; // 使用原始索引作为value
-                option.textContent = `${job.company} - ${job.name} (匹配度${score}分)`;
+                option.value = job._originalIndex;
+                option.textContent = `${job.company} - ${job.name} (匹配度${job._score}分)`;
                 targetJobSelect.appendChild(option);
+
+                // 填充可点击列表
+                const btn = document.createElement('button');
+                btn.className = 'job-select-btn';
+                btn.dataset.index = job._originalIndex;
+                btn.innerHTML = `${job.company} - ${job.name} <span class="job-score">${job._score}分</span>`;
+                btn.onclick = function() {
+                    selectJob(job._originalIndex);
+                };
+                selectorListContent.appendChild(btn);
             });
             recommendedJobs = sortedJobs;
+        }
+
+        // 选择岗位
+        function selectJob(index) {
+            currentTargetJob = index.toString();
+            // 更新下拉框
+            document.getElementById('targetJob').value = index.toString();
+            // 更新按钮选中状态
+            document.querySelectorAll('.job-select-btn').forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.dataset.index === index.toString()) {
+                    btn.classList.add('selected');
+                }
+            });
+            // 更新AI建议
+            const job = scrapedJobs[parseInt(index)];
+            const tips = generateOptimizationTips(job);
+            const tipsList = document.getElementById('tipsList');
+            tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
         function calculateMatchScore(job) {
@@ -329,18 +376,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             renderJobs();
             document.getElementById('targetJob').addEventListener('change', function() {
-                currentTargetJob = this.value;
-                const tipsList = document.getElementById('tipsList');
-
-                if (!currentTargetJob) {
-                    tipsList.innerHTML = '<li>请从上方推荐列表选择目标岗位，获取AI优化建议</li>';
-                    return;
-                }
-
-                // 通过原始索引找到对应的职位
-                const job = scrapedJobs[parseInt(currentTargetJob)];
-                const tips = generateOptimizationTips(job);
-                tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
+                selectJob(parseInt(this.value));
             });
         });
 
