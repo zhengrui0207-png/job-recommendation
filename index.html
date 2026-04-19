@@ -148,20 +148,15 @@
         <div class="resume-optimization" id="resumeOptimization">
             <div class="section-title">简历优化方向</div>
             <div class="tip-card">
-                <h4>💡 优化方向</h4>
+                <h4>💡 AI 优化建议</h4>
                 <ul id="tipsList">
-                    <li>请先选择目标岗位获取优化建议</li>
+                    <li>请从上方推荐列表选择目标岗位，获取AI优化建议</li>
                 </ul>
             </div>
             <div class="target-job-selector">
                 <label>选择目标岗位：</label>
                 <select id="targetJob">
-                    <option value="">-- 选择要投递的岗位 --</option>
-                    <option value="iqiyi">爱奇艺 - AI产品经理</option>
-                    <option value="xiaohongshu">小红书 - 智能策略运营</option>
-                    <option value="bytedance-ks">字节跳动 - 用户增长PM(可颂)</option>
-                    <option value="tencent">腾讯 - 元宝AI产品经理</option>
-                    <option value="jd">京东 - AI产品经理</option>
+                    <option value="">-- 从推荐职位中选择 --</option>
                 </select>
             </div>
             <div class="optimization-actions">
@@ -188,6 +183,9 @@
     </div>
 
     <script>
+        // 简历关键词
+        const resumeSkills = ['Prompt', 'Agent', 'RAG', 'A/B', '测试', 'SQL', '数据', '分析', '用户增长', '产品经理', '大模型', 'LLM', '机器人', '运营', '策略', '增长', '算法', 'AI', 'Dify', 'Coze', 'PRD'];
+
         // 简历原始数据
         const resumeData = {
             name: '郑睿', title: 'AI产品运营 / 策略运营', phone: '17355385154', email: '826522322@qq.com', location: '北京',
@@ -196,7 +194,7 @@
                 { school: '安徽师范大学', degree: '本科', time: '2017.09 - 2021.06', major: '网络与新媒体（主修）、汉语言文学（辅修）· GPA 3.93/4.0 (前5%)' }
             ],
             experience: [
-                { company: '中航信移动科技有限公司 (航旅纵横)', time: '2024.07 - 至今', position: 'AI产品经理 / 用车策略运营', desc: ['AI Agent构建：主导上线"延误分析"、"机场助手"等 Agent。通过编写测试集、数据标注、badcase分析、收集用户反馈，将民航问题的回答正确率从58→87%。通过Dify平台调优Prompt，搭建工作流，设计产品形态，新增航班延误分析、机场助手、航班动态查询等Agent。从0到1推动"出行助手"功能上线，基于用户行程动态推送配套出行服务，日均流量10w+，通过协调 10+ 业务方对齐字段规则，实现了 AI 助手作为业务导流核心入口的逻辑闭环。', '数据策略增长：针对有无行程首页、航班详情页、行程详情页入口进行多次AB实验，设计租车、接送机展示逻辑，优化触发时机与视觉形态，使接送机点击率从 0.5% 提升至 1.63%，租车点击率由 0.25% 提升至 1.1%（翻4倍），大幅扩充获客漏斗。', '运营效能革命和发版上架：自创多维表格AI评测模版和招聘简历分析模板，解决了大规模评测和筛选简历的难题。针对用车结算及客诉痛点，利用Claude code编写结算和客诉处理脚本，实现结算周期从 7 天缩短至 1 天，客诉处理时效缩短 80%；负责航旅纵横app的发版上架，司机端Saas新app的从0到1的上架全流程。'] },
+                { company: '中航信移动科技有限公司 (航旅纵横)', time: '2024.07 - 至今', position: 'AI产品经理 / 用车策略运营', desc: ['AI Agent构建：主导上线"延误分析"、"机场助手"等 Agent。通过编写测试集、数据标注、badcase分析、收集用户反馈，将民航问题的回答正确率从58→87%。通过Dify平台调优Prompt，搭建工作流，设计产品形态，新增航班延误分析、机场助手、航班动态查询等Agent。从0到1推动"出行助手"功能上线，基于用户行程动态推送配套出行服务，日��流量10w+，通过协调 10+ 业务方对齐字段规则，实现了 AI 助手作为业务导流核心入口的逻辑闭环。', '数据策略增长：针对有无行程首页、航班详情页、行程详情页入口进行多次AB实验，设计租车、接送机展示逻辑，优化触发时机与视觉形态，使接送机点击率从 0.5% 提升至 1.63%，租车点击率由 0.25% 提升至 1.1%（翻4倍），大幅扩充获客漏斗。', '运营效能革命和发版上架：自创多维表格AI评测模版和招聘简历分析模板，解决了大规模评测和筛选简历的难题。针对用车结算及客诉痛点，利用Claude code编写结算和客诉处理脚本，实现结算周期从 7 天缩短至 1 天，客诉处理时效缩短 80%；负责航旅纵横app的发版上架，司机端Saas新app的从0到1的上架全流程。'] },
                 { company: '携程机票事业部 | 用户增长产品经理', time: '2023.06 - 2024.01', position: '用户增长产品经理', desc: ['校园市场增长：从0到1策划了"校园飞行官"项目，通过用户分层分析筛选核心校园场景，招募校园大使并搭建发布小红书、抖音号的内容规则、内容模版sop和积分体系，联动多部门开展培训、地推拉新和学生认证裂变。应用AI外呼引擎，针对RFM模型分析出的流失老用户进行策略性召回，设计针对学生侧的机票免单抽奖活动，驱动机票老客订单增长961，学生新客增长418，学生新客1500+。'] },
                 { company: '字节跳动 · 飞书 | 企业效能顾问', time: '2022.09 - 2023.02', position: '企业效能顾问', desc: ['产品心智渗透：支持飞书 People客户回访，根据回访记录，产出 10 份深度行业研报和OKR使用数据复盘。日常制作飞书工具提效的知识卡片，策划"飞书招聘微课"系列视频8期，用剪映制作动画内容，播放量环比增长 120%，提升了B 端客户的活跃留存。'] },
                 { company: '百度新闻与内容运营部 | 产品运营', time: '2020.11 - 2021.05', position: '产品运营', desc: ['0-1 业务建设与内容运营：参与"领潮计划"冷启动，负责旅游垂类用户画像调研与竞品分析,访谈站内外作者，建立作者引入机制和内容过审/分发标准，优化feed流推荐策略。主导"女神节""清明节"等UGC话题运营，通过"流量现金激励+热点导流+宣传曝光+权益认证"策略驱动 2w+ 用户投稿，创造 700万+ 曝光，沉淀了初期的垂类创作者生态。'] }
@@ -206,13 +204,8 @@
             awards: ['英语六级', '教师资格证', '计算机二级', '第五届中国数据新闻大赛国家级优秀奖', '互联网+创业大赛银奖']
         };
 
-        const optimizationData = {
-            iqiyi: { tips: ['强调AIGC创作平台和Agent相关经验', '突出影视内容制作流程理解', '展示AI漫剧、AI真人剧等AIGC内容认知', '加强Prompt调优和算法协作经验'], keywords: ['AIGC', 'Agent', '大模型', '内容创作', '算法协作'] },
-            xiaohongshu: { tips: ['突出智能客服和意图识别经验', '强调SQL数据分析能力', '展示RFM模型和用户画像经验', '加强客服解决率提升成果'], keywords: ['智能客服', '意图识别', 'SQL', 'RFM模型', '大模型应用'] },
-            'bytedance-ks': { tips: ['强调用户增长和DAU提升经验', '突出激励业务和玩法设计经验', '展示数据驱动决策能力', '加强跨团队协作经验'], keywords: ['用户增长', 'DAU', '激励玩法', '数据驱动', 'A/B Test'] },
-            tencent: { tips: ['强调AI工具使用习惯和产品热情', '突出元宝/对话功能理解', '展示大模型能力边界认知', '加强AI应用搭建经验'], keywords: ['AI工具', '大模型', '对话产品', 'AI应用', 'Prompt'] },
-            jd: { tips: ['强调电商场景和AI结合经验', '突出交易链路和导购链路理解', '展示B端大模型产品落地经验', '加强跨部门资源协调能力'], keywords: ['电商AI', '智能获客', '大模型', 'B端产品', '产品路线图'] }
-        };
+        // 存储当前推荐的职位（用于动态生成优化建议）
+        let recommendedJobs = [];
 
         let currentTargetJob = '';
         let editedResume = null;
@@ -280,6 +273,17 @@
             html += `<div class="job-updated">📅 数据更新时间：${updateTime}</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
+
+            // 动态填充目标岗位下拉框
+            const targetJobSelect = document.getElementById('targetJob');
+            targetJobSelect.innerHTML = '<option value="">-- 从推荐职位中选择 --</option>';
+            sortedJobs.forEach((job, index) => {
+                const option = document.createElement('option');
+                option.value = job._originalIndex; // 使用原始索引作为value
+                option.textContent = `${job.company} - ${job.name} (匹配度${score}分)`;
+                targetJobSelect.appendChild(option);
+            });
+            recommendedJobs = sortedJobs;
         }
 
         function calculateMatchScore(job) {
@@ -326,15 +330,75 @@
             renderJobs();
             document.getElementById('targetJob').addEventListener('change', function() {
                 currentTargetJob = this.value;
-                const tips = optimizationData[currentTargetJob];
                 const tipsList = document.getElementById('tipsList');
-                if (tips && tips.tips) {
-                    tipsList.innerHTML = tips.tips.map(t => `<li>${t}</li>`).join('');
-                } else {
-                    tipsList.innerHTML = '<li>请先选择目标岗位获取优化建议</li>';
+
+                if (!currentTargetJob) {
+                    tipsList.innerHTML = '<li>请从上方推荐列表选择目标岗位，获取AI优化建议</li>';
+                    return;
                 }
+
+                // 通过原始索引找到对应的职位
+                const job = scrapedJobs[parseInt(currentTargetJob)];
+                const tips = generateOptimizationTips(job);
+                tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
             });
         });
+
+        // 根据职位要求生成AI优化建议
+        function generateOptimizationTips(job) {
+            const tips = [];
+            const jobName = (job.name || '').toLowerCase();
+            const jobSkills = (job.skills || '').toLowerCase();
+            const jobDesc = (job.name || '') + ' ' + (job.skills || '') + ' ' + (job.experience || '');
+
+            // 职位方向匹配
+            if (jobName.includes('ai') || jobName.includes('产品经理')) {
+                tips.push('突出AI Agent构建经验（航班助手、延误分析等6+ Agent）');
+                tips.push('展示回答正确率从58%→87%的成果');
+                tips.push('强调Dify/Coze平台使用和Prompt调优能力');
+            }
+
+            if (jobName.includes('运营') || jobName.includes('策略')) {
+                tips.push('强调数据策略增长经验（A/B实验、点击率翻倍）');
+                tips.push('突出用户分层和RFM模型应用能力');
+                tips.push('展示内容运营和用户增长方法论');
+            }
+
+            // 技能匹配
+            if (jobSkills.includes('b端') || jobSkills.includes('b端产品')) {
+                tips.push('强调B端产品经验和客户需求理解');
+                tips.push('突出大客户对接和跨部门协调能力');
+            }
+
+            if (jobSkills.includes('c端') || jobSkills.includes('c端产品')) {
+                tips.push('展示用户增长和DAU提升经验');
+                tips.push('突出激励玩法设计和数据驱动决策');
+            }
+
+            // 通用建议
+            const resumeText = JSON.stringify(resumeData).toLowerCase();
+
+            // 检查是否需要强调学历
+            if ((job.degree || '').includes('本科')) {
+                tips.push('突出北京邮电大学硕士学历和211背景');
+            }
+
+            // 检查是否需要强调创业项目
+            if (jobName.includes('创业') || jobName.includes('独立')) {
+                tips.push('展示AI求职辅导App从0到1的独立开发经验');
+            }
+
+            // 如果建议太少，补充通用建议
+            if (tips.length < 3) {
+                tips.push('强调日均流量10w+的C端产品经验');
+                tips.push('展示SQL数据分析和A/B Test实验设计能力');
+                tips.push('体现10+业务方跨团队协作经验');
+            }
+
+            // 去重并限制3-5条
+            const uniqueTips = [...new Set(tips)].slice(0, 5);
+            return uniqueTips;
+        }
 
         function startOptimization() {
             if (!currentTargetJob) { alert('请先选择目标岗位'); return; }
@@ -353,34 +417,44 @@
             document.getElementById('modalOverlay').style.display = 'none';
         }
 
+        function getJobBasedTips() {
+            if (!currentTargetJob) return [];
+            const job = scrapedJobs[parseInt(currentTargetJob)];
+            return generateOptimizationTips(job);
+        }
+
         function getExpOptimizationTips(company) {
-            const tips = optimizationData[currentTargetJob];
-            if (!tips) return [];
+            const jobTips = getJobBasedTips();
+            if (!jobTips || jobTips.length === 0) return [];
             const companyTips = [];
             if (company.includes('航旅纵横') || company.includes('中航信')) {
-                companyTips.push('强调Agent构建和RAG能力', '突出航班助手、延误分析等6+核心功能', '展示回答正确率从58%→87%的成果', '体现10+业务方协调能力');
+                companyTips.push('突出Agent构建和RAG能力');
+                companyTips.push('展示回答正确率58→87%的成果');
             } else if (company.includes('携程')) {
-                companyTips.push('强调用户增长1500+的成果', '展示ABtest实验优化经验', '突出RFM模型和用户画像标签体系', '体现校园渠道从0到1搭建经验');
+                companyTips.push('强调用户增长1500+成果');
+                companyTips.push('展示A/B实验优化经验');
             } else if (company.includes('字节') || company.includes('飞书')) {
-                companyTips.push('展示企业效能顾问经验', '强调OKR和数据简报制作能力', '突出B端客户活跃留存提升');
+                companyTips.push('展示企业效能顾问经验');
+                companyTips.push('突出B端客户活跃留存提升');
             } else if (company.includes('百度')) {
-                companyTips.push('强调从0到1建设经验', '突出2w+用户投稿、700万+曝光', '体现垂类创作者生态搭建');
+                companyTips.push('强调从0到1建设经验');
+                companyTips.push('突出2w+用户投稿、700万+曝光');
             }
-            return companyTips;
+            const genericTips = jobTips.filter(t => t.includes('日均流量') || t.includes('SQL') || t.includes('跨团队'));
+            return [...companyTips, ...genericTips].slice(0, 4);
         }
 
         function renderResumeEditor() {
-            const tips = optimizationData[currentTargetJob];
-            const keywords = tips ? tips.keywords : [];
-            const overallTips = tips ? tips.tips : [];
+            const jobTips = getJobBasedTips();
+            const selectedJob = currentTargetJob ? scrapedJobs[parseInt(currentTargetJob)] : null;
             const editor = document.getElementById('resumeEditor');
             const savedResume = loadSavedResume();
             editedResume = savedResume ? JSON.parse(JSON.stringify(savedResume)) : JSON.parse(JSON.stringify(resumeData));
 
             let html = `
                 <div class="optimization-header">
-                    <h4>✨ 针对【${document.getElementById('targetJob').selectedOptions[0].text}】的优化建议</h4>
-                    <ul class="overall-tips">${overallTips.map(tip => `<li>${tip}</li>`).join('')}</ul>
+                    <h4>✨ 针对【${selectedJob ? selectedJob.company + ' - ' + selectedJob.name : '所选岗位'}】的优化建议</h4>
+                    <ul class="overall-tips">${jobTips.map(tip => `<li>${tip}</li>`).join('')}</ul>
                 </div>
                 <div class="editor-section">
                     <h4>基本信息</h4>
@@ -388,7 +462,7 @@
                     <div class="edit-group"><label>职位：</label><input type="text" id="edit_title" value="${editedResume.title}" onchange="hasUnsavedChanges=true"></div>
                 </div>
                 <div class="editor-section">
-                    <div class="section-header"><h4>工作经历 <span class="keyword-hint">关键词：${keywords.join(' / ')}</span></h4><button class="btn-add-exp" onclick="addExperience()">➕ 添加工作经历</button></div>
+                    <div class="section-header"><h4>工作经历 <span class="keyword-hint">💡 重点突出：${selectedJob ? (selectedJob.skills || selectedJob.name) : 'AI产品能力'}</span></h4><button class="btn-add-exp" onclick="addExperience()">➕ 添加工作经历</button></div>
             `;
 
             editedResume.experience.forEach((exp, i) => {
