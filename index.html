@@ -238,11 +238,18 @@
                 return;
             }
 
+            // 按匹配分数排序
+            const sortedJobs = [...scrapedJobs].map((job, index) => ({
+                ...job,
+                _score: calculateMatchScore(job),
+                _originalIndex: index
+            })).sort((a, b) => b._score - a._score);
+
             let html = '';
-            scrapedJobs.forEach((job, index) => {
+            sortedJobs.forEach((job, index) => {
                 const rank = index + 1;
                 const rankClass = rank <= 2 ? 'gold' : (rank <= 5 ? 'silver' : 'bronze');
-                const score = calculateMatchScore(job);
+                const score = job._score;
 
                 html += `
                     <div class="job-row">
@@ -276,15 +283,42 @@
         }
 
         function calculateMatchScore(job) {
+            // 基础分60分
             let score = 60;
-            if (job.name && job.name.toLowerCase().includes('ai')) score += 20;
-            if (job.skills && job.skills.toLowerCase().includes('ai')) score += 10;
-            const resumeSkills = ['Prompt', 'Agent', 'RAG', 'A/B', 'SQL', '数据分析', '用户增长', '产品经理'];
-            if (job.skills) {
-                resumeSkills.forEach(skill => {
-                    if (job.skills.toLowerCase().includes(skill.toLowerCase())) score += 3;
-                });
-            }
+
+            // 简历关键词（从resumeData提取）
+            const resumeKeywords = [
+                'AI', 'Agent', 'RAG', 'A/B', '测试', 'SQL', '数据',
+                '分析', '用户增长', '产品经理', 'Prompt', '大模型',
+                'LLM', '机器人', '运营', '策略', '增长', '算法'
+            ];
+
+            // 职位名称匹配（权重20）
+            const jobName = (job.name || '').toLowerCase();
+            if (jobName.includes('ai') || jobName.includes('人工智能')) score += 20;
+            else if (jobName.includes('产品经理')) score += 15;
+            else if (jobName.includes('运营')) score += 10;
+
+            // 技能关键词匹配（权重30）
+            const skills = (job.skills || '').toLowerCase();
+            let skillMatchCount = 0;
+            resumeKeywords.forEach(kw => {
+                if (skills.includes(kw.toLowerCase())) skillMatchCount++;
+            });
+            score += Math.min(skillMatchCount * 5, 30);
+
+            // 地区匹配（权重10）- 默认北京
+            const area = (job.area || '北京').toLowerCase();
+            if (area.includes('北京') || area.includes('上海') || area.includes('深圳')) score += 10;
+
+            // 薪资匹配（权重5）- 15-20K为理想范围
+            const salary = (job.salary || '').toLowerCase();
+            if (salary.includes('15') || salary.includes('20') || salary.includes('25')) score += 5;
+
+            // 经验要求匹配（权重5）
+            const exp = (job.experience || '').toLowerCase();
+            if (exp.includes('1-3') || exp.includes('3-5') || exp.includes('不限')) score += 5;
+
             return Math.min(score, 100);
         }
 
