@@ -1166,11 +1166,13 @@
                     desc: [
                         '0-1 业务建设与内容运营：参与"领潮计划"冷启动，负责旅游垂类用户画像调研与竞品分析,访谈站内外作者，建立作者引入机制和内容过审/分发标准，优化feed流推荐策略。主导"女神节""清明节"等UGC话题运营，通过"流量现金激励+热点导流+宣传曝光+权益认证"策略驱动 2w+ 用户投稿，创造 700万+ 曝光，沉淀了初期的垂类创作者生态。'
                     ]
-                },
+                }
+            ],
+            projects: [
                 {
-                    company: 'AI 求职辅导 App (创业项目)',
+                    name: 'AI 求职辅导 App (创业项目)',
                     time: '2024.11 - 至今',
-                    position: '产品负责人 / 独立开发者',
+                    role: '产品负责人 / 独立开发者',
                     desc: [
                         'AI简历产品开发：利用Claude code和codex进行编程，实现招聘信息抓取-匹配度分析-简历一键优化-投递全流程，独立完成web端的开发并接入大模型和云服务器。',
                         '求职辅导app设计：负责app整体的产品设计，采用html-to-figma进行UI设计，运营小红书账号，完成60+行业导师、100+学员资源入库；自主开发导师管理后台与学员预约系统前端页面，闭环实现"简历创建→智能匹配导师→预约导师→邮件提醒→反馈评价"全流程。',
@@ -1402,6 +1404,48 @@
 
             html += `
                 </div>
+
+                <div class="editor-section">
+                    <div class="section-header">
+                        <h4>项目经历</h4>
+                        <button class="btn-add-exp" onclick="addProject()">➕ 添加项目</button>
+                    </div>
+            `;
+
+            editedResume.projects.forEach((proj, i) => {
+                html += `
+                    <div class="exp-editor" id="proj_${i}">
+                        <div class="exp-actions">
+                            <button class="btn-move" onclick="moveProject(${i}, -1)" title="上移" ${i === 0 ? 'disabled' : ''}>⬆️</button>
+                            <button class="btn-move" onclick="moveProject(${i}, 1)" title="下移" ${i === editedResume.projects.length - 1 ? 'disabled' : ''}>⬇️</button>
+                            <button class="btn-delete" onclick="deleteProject(${i})">🗑️ 删除</button>
+                        </div>
+                        <div class="edit-group">
+                            <label>项目名称：</label>
+                            <input type="text" id="edit_proj_${i}_name" value="${proj.name}" onchange="hasUnsavedChanges=true">
+                        </div>
+                        <div class="edit-group">
+                            <label>时间：</label>
+                            <input type="text" id="edit_proj_${i}_time" value="${proj.time}" onchange="hasUnsavedChanges=true">
+                        </div>
+                        <div class="edit-group">
+                            <label>职责/角色：</label>
+                            <input type="text" id="edit_proj_${i}_role" value="${proj.role}" onchange="hasUnsavedChanges=true">
+                        </div>
+                        <div class="edit-group">
+                            <div class="textarea-toolbar">
+                                <label>项目描述：</label>
+                                <button class="btn-bold" onclick="boldText('edit_proj_${i}_desc')" title="加粗">𝐁</button>
+                            </div>
+                            <textarea id="edit_proj_${i}_desc" rows="6" onchange="hasUnsavedChanges=true">${proj.desc.join('\n')}</textarea>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
                 <div class="editor-section">
                     <h4>核心技能 <span class="keyword-hint">建议添加：${keywords.slice(0, 3).join(', ')}</span></h4>
                     <div class="edit-group">
@@ -1472,6 +1516,38 @@
             renderResumeEditor();
         }
 
+        // 删除项目经历
+        function deleteProject(index) {
+            if (!confirm('确定要删除这个项目吗？')) return;
+            editedResume.projects.splice(index, 1);
+            hasUnsavedChanges = true;
+            renderResumeEditor();
+        }
+
+        // 移动项目经历
+        function moveProject(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= editedResume.projects.length) return;
+
+            const temp = editedResume.projects[index];
+            editedResume.projects[index] = editedResume.projects[newIndex];
+            editedResume.projects[newIndex] = temp;
+            hasUnsavedChanges = true;
+            renderResumeEditor();
+        }
+
+        // 添加新项目经历
+        function addProject() {
+            editedResume.projects.push({
+                name: '新项目名称',
+                time: '2024.01 - 至今',
+                role: '角色/职责',
+                desc: ['描述1', '描述2']
+            });
+            hasUnsavedChanges = true;
+            renderResumeEditor();
+        }
+
         // 保存修改
         function saveResume() {
             if (!editedResume) return;
@@ -1485,6 +1561,13 @@
                 exp.position = document.getElementById(`edit_exp_${i}_position`).value;
                 exp.time = document.getElementById(`edit_exp_${i}_time`).value;
                 exp.desc = document.getElementById(`edit_exp_${i}_desc`).value.split('\n').filter(d => d.trim());
+            });
+
+            editedResume.projects.forEach((proj, i) => {
+                proj.name = document.getElementById(`edit_proj_${i}_name`).value;
+                proj.time = document.getElementById(`edit_proj_${i}_time`).value;
+                proj.role = document.getElementById(`edit_proj_${i}_role`).value;
+                proj.desc = document.getElementById(`edit_proj_${i}_desc`).value.split('\n').filter(d => d.trim());
             });
 
             editedResume.skills = document.getElementById('edit_skills').value.split(',').map(s => s.trim()).filter(s => s);
@@ -1641,18 +1724,18 @@
     `).join('')}
 
     <div class="section-title">项目经历</div>
+    ${editedResume.projects.map(proj => `
     <div class="item">
         <div class="item-header">
-            <span>AI 求职辅导 App (创业项目)</span>
-            <span>2024.11 - 至今</span>
+            <span>${proj.name}</span>
+            <span>${proj.time}</span>
         </div>
-        <div class="item-sub">产品负责人 / 独立开发者</div>
+        <div class="item-sub">${proj.role}</div>
         <ul>
-            <li><strong>AI简历产品开发：</strong>利用Claude code和codex进行编程，实现招聘信息抓取-匹配度分析-简历一键优化-投递全流程，独立完成web端的开发并接入大模型和云服务器。</li>
-            <li><strong>求职辅导app设计：</strong>负责app整体的产品设计，采用html-to-figma进行UI设计，运营小红书账号，完成60+行业导师、100+学员资源入库；自主开发导师管理后台与学员预约系统前端页面，闭环实现"简历创建→智能匹配导师→预约导师→邮件提醒→反馈评价"全流程。</li>
-            <li><strong>商业化探索：</strong>规划导师约课佣金体系及首约免费权益，策划校园讲座活动，目前已和学校达成合作，正进行小范围用户灰度测试。</li>
+            ${proj.desc.map(d => `<li>${toBold(d)}</li>`).join('')}
         </ul>
     </div>
+    `).join('')}
 </div>
 <script>
 window.onload = function() {
