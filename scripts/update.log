@@ -9,3 +9,6 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+=== Job Update Started: Mon Apr 20 18:11:55 CST 2026 ===
+Searching jobs on Boss...
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
