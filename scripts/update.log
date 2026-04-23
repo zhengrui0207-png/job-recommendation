@@ -34,3 +34,13 @@ Changes pushed to GitHub
 === Job Update Started: Wed Apr 22 18:09:38 CST 2026 ===
 Searching jobs on Boss...
 /Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
+[main 37469cc] Update job listings: 2026-04-22 18:09
+ 2 files changed, 13 insertions(+)
+ssh: connect to host github.com port 22: Undefined error: 0
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+=== Job Update Started: Thu Apr 23 18:35:07 CST 2026 ===
+Searching jobs on Boss...
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
