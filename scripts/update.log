@@ -44,3 +44,14 @@ and the repository exists.
 === Job Update Started: Thu Apr 23 18:35:07 CST 2026 ===
 Searching jobs on Boss...
 /Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
+[main 17c75b1] Update job listings: 2026-04-23 18:35
+ 2 files changed, 12 insertions(+)
+kex_exchange_identification: Connection closed by remote host
+Connection closed by 127.0.0.1 port 7897
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+=== Job Update Started: Fri Apr 24 18:31:10 CST 2026 ===
+Searching jobs on Boss...
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
