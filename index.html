@@ -138,51 +138,43 @@
         .jobs-table { background: transparent; border-radius: 0; box-shadow: none; overflow: visible; margin-bottom: 28px; }
         .jobs-table-header { display: none; }
         #jobListContainer { display: flex; flex-direction: column; gap: 18px; }
-        .jobs-insight-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-        .insight-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06); }
-        .insight-card-label { font-size: 12px; letter-spacing: 0.08em; color: var(--ink-2); text-transform: uppercase; margin-bottom: 8px; }
-        .insight-card-value { font-size: 28px; font-weight: 700; color: var(--ink-1); }
-        .insight-card-desc { margin-top: 6px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
-        .data-warning { background: linear-gradient(135deg, rgba(180, 83, 9, 0.08), rgba(245, 158, 11, 0.12)); border: 1px solid rgba(217, 119, 6, 0.14); color: #92400e; border-radius: 18px; padding: 16px 18px; font-size: 14px; line-height: 1.7; }
-        .job-card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 24px; box-shadow: 0 18px 40px rgba(20, 35, 52, 0.08); display: grid; grid-template-columns: 1.55fr 280px; gap: 24px; align-items: start; }
+        .job-card { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 18px 20px; box-shadow: 0 12px 28px rgba(20, 35, 52, 0.08); display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 18px; align-items: start; }
         .job-card:hover { transform: translateY(-2px); box-shadow: 0 24px 48px rgba(20, 35, 52, 0.12); }
         .job-card-main { min-width: 0; }
-        .job-card-side { display: flex; flex-direction: column; gap: 14px; }
-        .job-card-top { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
-        .rank-chip { min-width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; background: linear-gradient(135deg, #0f766e, #155e75); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+        .job-card-side { display: grid; gap: 10px; }
+        .job-card-top { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
+        .rank-chip { min-width: 40px; height: 40px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: white; background: linear-gradient(135deg, #0f766e, #155e75); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
         .rank-chip.top-3 { background: linear-gradient(135deg, #ca8a04, #ea580c); }
         .rank-chip.top-10 { background: linear-gradient(135deg, #2563eb, #0f766e); }
-        .company-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
-        .company-name { font-size: 18px; font-weight: 700; color: var(--ink-1); margin: 0; }
-        .job-title { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 10px; }
-        .job-meta-line { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
-        .meta-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: #f5f7fa; color: var(--ink-2); font-size: 13px; }
-        .job-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-        .job-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+        .company-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 4px; }
+        .company-name { font-size: 16px; font-weight: 700; color: var(--ink-1); margin: 0; }
+        .job-title { font-size: 18px; font-weight: 700; color: #0f172a; margin: 0 0 8px; }
+        .job-meta-line { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+        .meta-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: #f5f7fa; color: var(--ink-2); font-size: 12px; }
+        .job-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
+        .job-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; }
         .job-tag.match { background: var(--accent-soft); color: #115e59; }
         .job-tag.finance { background: var(--amber-soft); color: #9a3412; }
         .job-tag.active { background: rgba(37, 99, 235, 0.10); color: #1d4ed8; }
         .job-tag.ai { background: rgba(91, 33, 182, 0.12); color: #6d28d9; }
         .job-tag.size { background: rgba(71, 85, 105, 0.10); color: #334155; }
         .job-tag.risk { background: var(--rose-soft); color: #be185d; }
-        .job-summary { color: #334155; font-size: 14px; line-height: 1.85; margin-bottom: 16px; }
+        .job-summary { color: #334155; font-size: 13px; line-height: 1.7; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
         .summary-mark { background: linear-gradient(180deg, rgba(15, 118, 110, 0) 0%, rgba(15, 118, 110, 0.18) 100%); color: #0f766e; font-weight: 700; padding: 0 2px; border-radius: 4px; }
-        .job-highlights { display: grid; gap: 10px; }
-        .highlight-row { background: #f9fbfc; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #334155; line-height: 1.65; }
+        .job-highlights { display: grid; gap: 8px; }
+        .highlight-row { background: #f9fbfc; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 12px; padding: 9px 11px; font-size: 12px; color: #334155; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .highlight-row strong { color: #0f172a; }
-        .job-side-panel { background: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; padding: 18px; }
-        .salary-main { font-size: 30px; font-weight: 800; color: #b45309; line-height: 1.1; }
-        .salary-sub { margin-top: 6px; color: var(--ink-2); font-size: 13px; }
-        .score-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
-        .score-value { font-size: 34px; font-weight: 800; color: #0f766e; line-height: 1; }
-        .score-label { font-size: 13px; color: var(--ink-2); }
-        .score-bar { width: 100%; height: 10px; background: rgba(15, 23, 42, 0.07); border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+        .job-side-panel { background: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 16px; padding: 14px; }
+        .salary-main { font-size: 26px; font-weight: 800; color: #b45309; line-height: 1.1; }
+        .score-panel { display: flex; align-items: end; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+        .score-value { font-size: 28px; font-weight: 800; color: #0f766e; line-height: 1; }
+        .score-label { font-size: 12px; color: var(--ink-2); }
+        .score-bar { width: 100%; height: 8px; background: rgba(15, 23, 42, 0.07); border-radius: 999px; overflow: hidden; margin-bottom: 0; }
         .score-bar-fill { height: 100%; background: linear-gradient(135deg, #0f766e, #2563eb); border-radius: 999px; }
-        .score-reasons { display: flex; flex-wrap: wrap; gap: 8px; }
-        .score-reason { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(15, 118, 110, 0.08); color: #0f766e; font-size: 12px; font-weight: 600; }
-        .detail-list { display: grid; gap: 8px; font-size: 13px; color: #475569; }
+        .detail-list { display: grid; gap: 6px; font-size: 12px; color: #475569; }
         .detail-list strong { color: #0f172a; }
-        .action-btn { width: 100%; text-align: center; padding: 12px 16px; border-radius: 14px; background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18); }
+        .action-btn { width: 100%; text-align: center; padding: 10px 14px; border-radius: 12px; background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18); }
+        .empty-state { background: rgba(255,255,255,0.9); border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; padding: 22px; color: #475569; line-height: 1.8; }
         .job-updated { text-align: center; padding: 14px 16px; color: #64748b; font-size: 13px; background: rgba(255,255,255,0.65); border: 1px dashed rgba(100, 116, 139, 0.22); border-radius: 18px; }
         .tip-card, .job-selector-list { background: linear-gradient(180deg, rgba(248,250,252,0.96), rgba(255,255,255,0.96)); border: 1px solid rgba(148, 163, 184, 0.16); }
         .job-select-btn:hover { border-color: #0f766e; background: rgba(15, 118, 110, 0.06); }
@@ -190,15 +182,13 @@
         .btn-optimize, .btn-add-exp { background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); }
         .keyword-hint { color: #0f766e; }
         @media (max-width: 1180px) {
-            .jobs-insight-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
             .job-card { grid-template-columns: 1fr; }
         }
         @media (max-width: 768px) {
-            .jobs-insight-strip { grid-template-columns: 1fr; }
-            .job-card { padding: 18px; border-radius: 20px; }
+            .job-card { padding: 16px; border-radius: 18px; }
             .job-card-top { flex-direction: column; gap: 12px; }
             .rank-chip { width: 42px; height: 42px; min-width: 42px; border-radius: 14px; }
-            .salary-main { font-size: 26px; }
+            .salary-main { font-size: 22px; }
             .job-title { font-size: 18px; }
             .optimization-actions { flex-direction: column; }
         }
@@ -549,6 +539,17 @@
             return riskTags;
         }
 
+        function isSocialHireJob(job) {
+            const title = normalizeText(job.name).toLowerCase();
+            const experience = normalizeText(job.experience).toLowerCase();
+
+            if (title.includes('校招') || title.includes('应届') || title.includes('实习') || title.includes('管培')) return false;
+            if (experience.includes('在校') || experience.includes('应届')) return false;
+            if (experience.includes('5-10') || experience.includes('10年')) return false;
+
+            return true;
+        }
+
         function buildJobTags(job, skillKeywords, showActiveTag) {
             const tags = [];
 
@@ -653,37 +654,6 @@
             };
         }
 
-        function renderInsightStrip(visibleJobs, detailCoverageCount, showActiveTag) {
-            const salaryQualifiedCount = visibleJobs.filter(job => parseSalaryRange(job.salary).min >= 20).length;
-            const aiFocusedCount = visibleJobs.filter(job => /ai|llm|大模型/i.test(normalizeText(job.name))).length;
-            const skillRichCount = visibleJobs.filter(job => job.skillKeywords.length >= 3).length;
-
-            return `
-                <div class="jobs-insight-strip">
-                    <div class="insight-card">
-                        <div class="insight-card-label">展示岗位</div>
-                        <div class="insight-card-value">${visibleJobs.length}</div>
-                        <div class="insight-card-desc">这版不再把岗位直接过滤掉，先保证你能稳定看到至少 20 条，再通过标签区分风险项。</div>
-                    </div>
-                    <div class="insight-card">
-                        <div class="insight-card-label">完整 JD 覆盖</div>
-                        <div class="insight-card-value">${detailCoverageCount}/${visibleJobs.length}</div>
-                        <div class="insight-card-desc">抓到详情的岗位会展示更长摘要和更明确的技能重点，评分也会更稳定。</div>
-                    </div>
-                    <div class="insight-card">
-                        <div class="insight-card-label">20K+ 薪资</div>
-                        <div class="insight-card-value">${salaryQualifiedCount}</div>
-                        <div class="insight-card-desc">优先保留了更符合你目标薪资带的岗位，避免低薪岗位把推荐列表稀释掉。</div>
-                    </div>
-                    <div class="insight-card">
-                        <div class="insight-card-label">技能清晰度</div>
-                        <div class="insight-card-value">${skillRichCount}</div>
-                        <div class="insight-card-desc">${showActiveTag ? 'HR 活跃度出现差异时才会单独展示，不再把“今日活跃”刷成整屏红标签。' : '当前活跃度字段几乎一致，所以我把它降级成辅助信息，不再抢视觉注意力。'}</div>
-                    </div>
-                </div>
-            `;
-        }
-
         function loadSavedResume() {
             const saved = localStorage.getItem('editedResume_' + currentTargetJob);
             if (saved) return JSON.parse(saved);
@@ -710,20 +680,23 @@
                 .map((job, index) => normalizeJob(job, index))
                 .sort((a, b) => b._score - a._score);
 
-            const visibleJobs = normalizedJobs.length <= 20 ? normalizedJobs : normalizedJobs.slice(0, 20);
+            const eligibleJobs = normalizedJobs.filter(isSocialHireJob);
+            const visibleJobs = eligibleJobs.length <= 20 ? eligibleJobs : eligibleJobs.slice(0, 20);
             const activeValues = uniqueList(visibleJobs.map(job => getJobActiveTime(job)));
             const showActiveTag = activeValues.length > 1;
             const detailCoverageCount = visibleJobs.filter(job => job._hasDetail).length;
+
+            if (!visibleJobs.length) {
+                container.innerHTML = `<div class="empty-state">当前抓取结果里没有符合社招条件的岗位，所以我没有把校招/应届职位硬塞进列表。下一步需要重新按“社招”关键词抓取新数据；抓到后这里会只展示真正可投的岗位。</div>`;
+                document.getElementById('updateTime').textContent = getCurrentLastUpdated();
+                return;
+            }
 
             visibleJobs.forEach(job => {
                 job.tags = buildJobTags(job, job.skillKeywords, showActiveTag);
             });
 
-            let html = renderInsightStrip(visibleJobs, detailCoverageCount, showActiveTag);
-
-            if (detailCoverageCount < Math.ceil(visibleJobs.length * 0.6)) {
-                html += `<div class="data-warning">当前大部分岗位还是基础搜索结果，完整 JD 抓取覆盖不足。想拿到你提到的“100 字以上岗位概括、明确技能要求、公司规模/融资/HR 活跃度标签”，需要先让 Boss 抓取链路处于已登录且可连接状态，然后重新执行抓取任务。</div>`;
-            }
+            let html = '';
 
             visibleJobs.forEach((job, index) => {
                 const scoreMeta = job._scoreMeta;
@@ -757,7 +730,6 @@
                         <aside class="job-card-side">
                             <div class="job-side-panel">
                                 <div class="salary-main">${escapeHtml(normalizeText(job.salary) || '薪资面议')}</div>
-                                <div class="salary-sub">岗位匹配会优先考虑薪资、技能关键词、JD 完整度和城市优先级。</div>
                             </div>
                             <div class="job-side-panel">
                                 <div class="score-panel">
@@ -767,13 +739,12 @@
                                     </div>
                                 </div>
                                 <div class="score-bar"><div class="score-bar-fill" style="width:${scoreMeta.score}%;"></div></div>
-                                <div class="score-reasons">${scoreMeta.reasons.map(reason => `<span class="score-reason">${escapeHtml(reason)}</span>`).join('')}</div>
                             </div>
                             <div class="job-side-panel">
                                 <div class="detail-list">
                                     <div><strong>技能命中：</strong>${escapeHtml(job.skillKeywords.join('、') || '待补充')}</div>
-                                    <div><strong>公司信息：</strong>${escapeHtml(getJobScale(job) || '规模待补充')}${getJobFinance(job) ? ` · ${escapeHtml(getJobFinance(job))}` : ''}</div>
-                                    <div><strong>数据完整度：</strong>${job._hasDetail ? '已抓到详细 JD' : '仅基础搜索结果'}</div>
+                                    <div><strong>公司规模：</strong>${escapeHtml(getJobScale(job) || '待补充')}</div>
+                                    <div><strong>融资阶段：</strong>${escapeHtml(getJobFinance(job) || '待补充')}</div>
                                 </div>
                             </div>
                             <div><a href="${job.url || '#'}" class="action-btn" target="_blank">查看原始岗位</a></div>
@@ -783,7 +754,7 @@
             });
 
             const updateTime = getCurrentLastUpdated();
-            html += `<div class="job-updated">数据更新时间：${updateTime} ｜ 当前展示 ${visibleJobs.length} 个岗位 ｜ 完整 JD ${detailCoverageCount} 个</div>`;
+            html += `<div class="job-updated">数据更新时间：${updateTime} ｜ 社招岗位 ${visibleJobs.length} 个 ｜ 完整 JD ${detailCoverageCount} 个</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
 

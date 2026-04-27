@@ -13,8 +13,17 @@ import subprocess
 from datetime import datetime
 from pathlib import Path
 
-KEYWORDS = ["AI产品经理", "策略运营", "用户增长", "产品经理", "产品运营", "AI运营", "内容运营"]
-CITY_TARGETS = {"北京": 18, "杭州": 4, "深圳": 4, "上海": 4}
+KEYWORDS = [
+    "AI产品经理 社招",
+    "AI产品 社招",
+    "策略产品经理 社招",
+    "增长产品经理 社招",
+    "商业化产品经理 社招",
+    "策略运营 社招",
+    "AI运营 社招",
+    "数据产品经理 社招",
+]
+CITY_TARGETS = {"北京": 24}
 MAX_TOTAL = 24
 SEARCH_LIMIT = 12
 SEARCH_TIMEOUT = 90
@@ -115,6 +124,20 @@ def parse_salary_floor_k(salary):
 def meets_salary_requirement(job):
     floor = parse_salary_floor_k(job.get("salary", ""))
     return floor is not None and floor >= 15
+
+
+def is_social_hire_job(job):
+    title = normalize_text(job.get("name")).lower()
+    experience = normalize_text(job.get("experience")).lower()
+
+    if any(keyword in title for keyword in ["校招", "应届", "实习", "管培"]):
+        return False
+    if "在校" in experience or "应届" in experience:
+        return False
+    if "5-10" in experience or "10年" in experience:
+        return False
+
+    return True
 
 
 def run_opencli(cmd, label, timeout):
@@ -260,7 +283,6 @@ def scrape_jobs(keyword, city):
     cmd = [
         "opencli", "boss", "search", keyword,
         "--city", city,
-        "--experience", "1-3年",
         "--limit", str(SEARCH_LIMIT),
         "--format", "json"
     ]
@@ -286,7 +308,7 @@ def scrape_jobs(keyword, city):
 
     jobs = payload if isinstance(payload, list) else [payload]
     normalized = [normalize_search_job(job) for job in jobs if isinstance(job, dict)]
-    return [job for job in normalized if meets_salary_requirement(job)]
+    return [job for job in normalized if meets_salary_requirement(job) and is_social_hire_job(job)]
 
 
 def fetch_job_detail(job):
@@ -370,6 +392,9 @@ def main():
 
                 detail_job = fetch_job_detail(search_job)
                 merged_job = merge_job_data(search_job, detail_job)
+                if not is_social_hire_job(merged_job):
+                    log(f"    跳过非社招岗位: {merged_job.get('company', '')} - {merged_job.get('name', '')}")
+                    continue
                 seen_keys.add(key)
                 all_jobs.append(merged_job)
 
