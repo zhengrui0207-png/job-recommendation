@@ -29,7 +29,12 @@
         .company-name { font-weight: 600; font-size: 15px; color: #1a1a2e; margin-bottom: 4px; }
         .job-title { font-size: 13px; color: #667eea; margin-bottom: 4px; }
         .company-meta { font-size: 12px; color: #888; }
-        .active-badge { display: inline-block; background: #4caf50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-top: 4px; }
+        .active-badge.today { background: #e91e63; }
+        .active-badge.recent { background: #ff9800; }
+        .ai-native-badge { display: inline-block; background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 8px; }
+        .filter-info { text-align: center; padding: 10px; background: #fff3e0; color: #e65100; font-size: 13px; margin: 10px 0; border-radius: 8px; }
+        .job-header-row { display: flex; align-items: center; gap: 8px; }
+        .meta-item { background: #f5f5f5; padding: 2px 8px; border-radius: 4px; font-size: 12px; margin-right: 6px; }
         .salary { font-size: 16px; font-weight: 700; color: #e65100; }
         .job-desc { font-size: 13px; color: #555; line-height: 1.6; }
         .highlight { background: linear-gradient(135deg, #667eea22, #764ba222); padding: 1px 4px; border-radius: 3px; color: #667eea; }
@@ -254,19 +259,40 @@
             })).sort((a, b) => b._score - a._score);
 
             let html = '';
+            let filteredCount = 0;
+            let excludedJobs = [];
             sortedJobs.forEach((job, index) => {
-                const rank = index + 1;
+                // 硬性过滤检查
+                if (shouldFilterJob(job)) {
+                    excludedJobs.push(job);
+                    return;
+                }
+                filteredCount++;
+                const rank = filteredCount;
                 const rankClass = rank <= 2 ? 'gold' : (rank <= 5 ? 'silver' : 'bronze');
                 const score = job._score;
+
+                // 获取公司信息和融资状态
+                const companySize = job.size || '未知';
+                const companyFinance = job.finance || '';
+                const activeTime = job.activeTime || '今日活跃';
+                const isAiNative = aiNativeCompanies.some(c => (job.company || '').toLowerCase().includes(c.toLowerCase())) ? '<span class="ai-native-badge">AI Native</span>' : '';
 
                 html += `
                     <div class="job-row">
                         <div class="rank ${rankClass}">${rank}</div>
-                        <div>
-                            <div class="company-name">${job.company || '未知公司'}</div>
+                        <div class="job-main">
+                            <div class="job-header-row">
+                                <div class="company-name">${job.company || '未知公司'}</div>
+                                ${isAiNative}
+                            </div>
                             <div class="job-title">${job.name || '职位名称'}</div>
-                            <div class="company-meta">${job.area || '北京'}</div>
-                            <div class="active-badge">今日活跃</div>
+                            <div class="company-meta">
+                                <span class="meta-item">📍 ${job.area || '北京'}</span>
+                                <span class="meta-item">🏢 ${companySize}</span>
+                                ${companyFinance ? `<span class="meta-item">💰 ${companyFinance}</span>` : ''}
+                            </div>
+                            <div class="active-badge ${activeTime.includes('今日') ? 'today' : (activeTime.includes('3天') ? 'recent' : '')}">${activeTime}</div>
                         </div>
                         <div class="salary">${job.salary || '薪资面议'}</div>
                         <div class="job-desc">
@@ -284,8 +310,13 @@
                 `;
             });
 
+            // 显示过滤信息
+            if (excludedJobs.length > 0) {
+                html += `<div class="filter-info">🚫 已过滤 ${excludedJobs.length} 个不符合条件的职位（实习/应届/经验要求过高/博士学历）</div>`;
+            }
+
             const updateTime = typeof lastUpdated !== 'undefined' ? lastUpdated : new Date().toLocaleString('zh-CN');
-            html += `<div class="job-updated">📅 数据更新时间：${updateTime}</div>`;
+            html += `<div class="job-updated">📅 数据更新时间：${updateTime} | 共 ${filteredCount} 个优质职位</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
 
@@ -333,24 +364,101 @@
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        function calculateMatchScore(job) {
-            // 基础分60分
-            let score = 60;
+        // 过滤硬性不符合的职位
+        function shouldFilterJob(job) {
+            const jobName = (job.name || '').toLowerCase();
+            const exp = (job.experience || '').toLowerCase();
+            const degree = (job.degree || '').toLowerCase();
 
-            // 简历关键词（从resumeData提取）
+            // 过滤：职位名称包含"实习"
+            if (jobName.includes('实习')) return true;
+            // 过滤：职位名称包含"应届"
+            if (jobName.includes('应届')) return true;
+            // 过滤：经验要求3年及以上（3-5年、5年、10年等）
+            if (exp.includes('3-5') || exp.includes('5年') || exp.includes('10年') || exp.includes('5-10')) return true;
+            // 过滤：学历要求博士
+            if (degree.includes('博士')) return true;
+
+            return false;
+        }
+
+        // AI Native 公司列表
+        const aiNativeCompanies = [
+            'minimax', '智谱', 'kimi', '月之暗面', 'moonshot', 'deepseek',
+            '百川', '零一万物', '阶跃星辰', '面壁智能', '稀宇科技', 'MiniMax',
+            'Zhipu', 'Moonshot', 'DeepSeek', 'Baichuan'
+        ];
+
+        // 计算匹配度分数
+        function calculateMatchScore(job) {
+            let score = 0;
+
+            // ========== 加分项 ==========
+
+            // 1. HR最近活跃（默认+15，因为大部分职位都是活跃的）
+            if (job.activeTime && (job.activeTime.includes('今日') || job.activeTime.includes('刚刚') || job.activeTime.includes('3天内'))) {
+                score += 15;
+            }
+
+            // 2. 工作地点加分
+            const area = (job.area || '北京').toLowerCase();
+            if (area.includes('朝阳')) {
+                score += 15; // 北京朝阳区最高优先级
+            } else if (area.includes('北京')) {
+                score += 10; // 北京（非朝阳）
+            } else if (area.includes('杭州')) {
+                score += 8;
+            } else if (area.includes('上海')) {
+                score += 5;
+            } else if (area.includes('深圳') || area.includes('广州')) {
+                score += 3;
+            } else {
+                score -= 10; // 其他城市
+            }
+
+            // 3. 公司规模1000人以上
+            const size = (job.size || '').toLowerCase();
+            if (size.includes('1000') || size.includes('2000') || size.includes('5000') || size.includes('10000') ||
+                size.includes('万人') || size.includes('5001-10000') || size.includes('10000以上')) {
+                score += 10;
+            }
+
+            // 4. 融资B轮及以上
+            const finance = (job.finance || '').toLowerCase();
+            if (finance.includes('b轮') || finance.includes('c轮') || finance.includes('d轮') ||
+                finance.includes('上市公司') || finance.includes('战略融资') || finance.includes('已上市')) {
+                score += 10;
+            } else if (finance.includes('a轮') || finance.includes('天使') || finance.includes('未融资')) {
+                score -= 10;
+            }
+
+            // 5. AI Native公司
+            const companyName = (job.company || '').toLowerCase();
+            for (const aiCompany of aiNativeCompanies) {
+                if (companyName.includes(aiCompany.toLowerCase())) {
+                    score += 20;
+                    break;
+                }
+            }
+
+            // 6. 职位名称包含AI相关
+            const jobName = (job.name || '').toLowerCase();
+            if (jobName.includes('ai') || jobName.includes('人工智能') || jobName.includes('大模型') || jobName.includes('llm')) {
+                score += 20;
+            } else if (jobName.includes('产品经理')) {
+                score += 15;
+            } else if (jobName.includes('策略') || jobName.includes('增长')) {
+                score += 10;
+            } else if (jobName.includes('运营')) {
+                score += 8;
+            }
+
+            // 7. 技能匹配度
             const resumeKeywords = [
                 'AI', 'Agent', 'RAG', 'A/B', '测试', 'SQL', '数据',
                 '分析', '用户增长', '产品经理', 'Prompt', '大模型',
                 'LLM', '机器人', '运营', '策略', '增长', '算法'
             ];
-
-            // 职位名称匹配（权重20）
-            const jobName = (job.name || '').toLowerCase();
-            if (jobName.includes('ai') || jobName.includes('人工智能')) score += 20;
-            else if (jobName.includes('产品经理')) score += 15;
-            else if (jobName.includes('运营')) score += 10;
-
-            // 技能关键词匹配（权重30）
             const skills = (job.skills || '').toLowerCase();
             let skillMatchCount = 0;
             resumeKeywords.forEach(kw => {
@@ -358,19 +466,19 @@
             });
             score += Math.min(skillMatchCount * 5, 30);
 
-            // 地区匹配（权重10）- 默认北京
-            const area = (job.area || '北京').toLowerCase();
-            if (area.includes('北京') || area.includes('上海') || area.includes('深圳')) score += 10;
-
-            // 薪资匹配（权重5）- 15-20K为理想范围
+            // 8. 薪资范围 ≥15k
             const salary = (job.salary || '').toLowerCase();
-            if (salary.includes('15') || salary.includes('20') || salary.includes('25')) score += 5;
+            if (salary.includes('15') || salary.includes('20') || salary.includes('25') || salary.includes('30')) {
+                score += 5;
+            }
 
-            // 经验要求匹配（权重5）
+            // 9. 经验要求1-3年
             const exp = (job.experience || '').toLowerCase();
-            if (exp.includes('1-3') || exp.includes('3-5') || exp.includes('不限')) score += 5;
+            if (exp.includes('1-3') || exp.includes('1年') || exp.includes('2年')) {
+                score += 5;
+            }
 
-            return Math.min(score, 100);
+            return Math.max(0, Math.min(score, 100)); // 确保分数在0-100之间
         }
 
         document.addEventListener('DOMContentLoaded', function() {
