@@ -115,6 +115,93 @@
         .job-select-btn:hover { border-color: #667eea; background: #667eea08; }
         .job-select-btn.selected { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: transparent; }
         .job-select-btn .job-score { font-size: 11px; opacity: 0.8; }
+        :root {
+            --bg-1: #f3f7fb;
+            --bg-2: #e8eef5;
+            --ink-1: #18222f;
+            --ink-2: #4f5f72;
+            --line: rgba(24, 34, 47, 0.08);
+            --card: rgba(255,255,255,0.96);
+            --accent: #0f766e;
+            --accent-soft: rgba(15, 118, 110, 0.12);
+            --gold: #b7791f;
+            --amber-soft: rgba(180, 83, 9, 0.12);
+            --rose-soft: rgba(190, 24, 93, 0.12);
+            --blue-soft: rgba(37, 99, 235, 0.12);
+            --green-soft: rgba(22, 163, 74, 0.12);
+        }
+        body { font-family: "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif; background: radial-gradient(circle at top left, #f9fbfd 0%, #edf3f8 45%, #e3ebf3 100%); color: var(--ink-1); }
+        .container { max-width: 1480px; }
+        .header, .resume-optimization { background: var(--card); border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 24px 60px rgba(20, 35, 52, 0.12); }
+        .header h1 { background: linear-gradient(135deg, #12344d 0%, #0f766e 60%, #1d4ed8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .summary-item h3, .section-title, .optimization-header h4 { color: #134e4a; }
+        .jobs-table { background: transparent; border-radius: 0; box-shadow: none; overflow: visible; margin-bottom: 28px; }
+        .jobs-table-header { display: none; }
+        #jobListContainer { display: flex; flex-direction: column; gap: 18px; }
+        .jobs-insight-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+        .insight-card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 18px 20px; box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06); }
+        .insight-card-label { font-size: 12px; letter-spacing: 0.08em; color: var(--ink-2); text-transform: uppercase; margin-bottom: 8px; }
+        .insight-card-value { font-size: 28px; font-weight: 700; color: var(--ink-1); }
+        .insight-card-desc { margin-top: 6px; font-size: 13px; line-height: 1.6; color: var(--ink-2); }
+        .data-warning { background: linear-gradient(135deg, rgba(180, 83, 9, 0.08), rgba(245, 158, 11, 0.12)); border: 1px solid rgba(217, 119, 6, 0.14); color: #92400e; border-radius: 18px; padding: 16px 18px; font-size: 14px; line-height: 1.7; }
+        .job-card { background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 24px; box-shadow: 0 18px 40px rgba(20, 35, 52, 0.08); display: grid; grid-template-columns: 1.55fr 280px; gap: 24px; align-items: start; }
+        .job-card:hover { transform: translateY(-2px); box-shadow: 0 24px 48px rgba(20, 35, 52, 0.12); }
+        .job-card-main { min-width: 0; }
+        .job-card-side { display: flex; flex-direction: column; gap: 14px; }
+        .job-card-top { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+        .rank-chip { min-width: 48px; height: 48px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; color: white; background: linear-gradient(135deg, #0f766e, #155e75); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+        .rank-chip.top-3 { background: linear-gradient(135deg, #ca8a04, #ea580c); }
+        .rank-chip.top-10 { background: linear-gradient(135deg, #2563eb, #0f766e); }
+        .company-line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+        .company-name { font-size: 18px; font-weight: 700; color: var(--ink-1); margin: 0; }
+        .job-title { font-size: 20px; font-weight: 700; color: #0f172a; margin: 0 0 10px; }
+        .job-meta-line { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
+        .meta-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; background: #f5f7fa; color: var(--ink-2); font-size: 13px; }
+        .job-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .job-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+        .job-tag.match { background: var(--accent-soft); color: #115e59; }
+        .job-tag.finance { background: var(--amber-soft); color: #9a3412; }
+        .job-tag.active { background: rgba(37, 99, 235, 0.10); color: #1d4ed8; }
+        .job-tag.ai { background: rgba(91, 33, 182, 0.12); color: #6d28d9; }
+        .job-tag.size { background: rgba(71, 85, 105, 0.10); color: #334155; }
+        .job-tag.risk { background: var(--rose-soft); color: #be185d; }
+        .job-summary { color: #334155; font-size: 14px; line-height: 1.85; margin-bottom: 16px; }
+        .summary-mark { background: linear-gradient(180deg, rgba(15, 118, 110, 0) 0%, rgba(15, 118, 110, 0.18) 100%); color: #0f766e; font-weight: 700; padding: 0 2px; border-radius: 4px; }
+        .job-highlights { display: grid; gap: 10px; }
+        .highlight-row { background: #f9fbfc; border: 1px solid rgba(148, 163, 184, 0.14); border-radius: 14px; padding: 12px 14px; font-size: 13px; color: #334155; line-height: 1.65; }
+        .highlight-row strong { color: #0f172a; }
+        .job-side-panel { background: #f8fafc; border: 1px solid rgba(148, 163, 184, 0.16); border-radius: 18px; padding: 18px; }
+        .salary-main { font-size: 30px; font-weight: 800; color: #b45309; line-height: 1.1; }
+        .salary-sub { margin-top: 6px; color: var(--ink-2); font-size: 13px; }
+        .score-panel { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+        .score-value { font-size: 34px; font-weight: 800; color: #0f766e; line-height: 1; }
+        .score-label { font-size: 13px; color: var(--ink-2); }
+        .score-bar { width: 100%; height: 10px; background: rgba(15, 23, 42, 0.07); border-radius: 999px; overflow: hidden; margin-bottom: 10px; }
+        .score-bar-fill { height: 100%; background: linear-gradient(135deg, #0f766e, #2563eb); border-radius: 999px; }
+        .score-reasons { display: flex; flex-wrap: wrap; gap: 8px; }
+        .score-reason { display: inline-flex; align-items: center; padding: 6px 10px; border-radius: 999px; background: rgba(15, 118, 110, 0.08); color: #0f766e; font-size: 12px; font-weight: 600; }
+        .detail-list { display: grid; gap: 8px; font-size: 13px; color: #475569; }
+        .detail-list strong { color: #0f172a; }
+        .action-btn { width: 100%; text-align: center; padding: 12px 16px; border-radius: 14px; background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); box-shadow: 0 10px 24px rgba(15, 118, 110, 0.18); }
+        .job-updated { text-align: center; padding: 14px 16px; color: #64748b; font-size: 13px; background: rgba(255,255,255,0.65); border: 1px dashed rgba(100, 116, 139, 0.22); border-radius: 18px; }
+        .tip-card, .job-selector-list { background: linear-gradient(180deg, rgba(248,250,252,0.96), rgba(255,255,255,0.96)); border: 1px solid rgba(148, 163, 184, 0.16); }
+        .job-select-btn:hover { border-color: #0f766e; background: rgba(15, 118, 110, 0.06); }
+        .job-select-btn.selected { background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); }
+        .btn-optimize, .btn-add-exp { background: linear-gradient(135deg, #0f766e 0%, #155e75 100%); }
+        .keyword-hint { color: #0f766e; }
+        @media (max-width: 1180px) {
+            .jobs-insight-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .job-card { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .jobs-insight-strip { grid-template-columns: 1fr; }
+            .job-card { padding: 18px; border-radius: 20px; }
+            .job-card-top { flex-direction: column; gap: 12px; }
+            .rank-chip { width: 42px; height: 42px; min-width: 42px; border-radius: 14px; }
+            .salary-main { font-size: 26px; }
+            .job-title { font-size: 18px; }
+            .optimization-actions { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
@@ -272,6 +359,331 @@
             }
         }
 
+        const jobSkillVocabulary = Array.from(new Set([
+            ...resumeSkills,
+            'AI产品', '产品策略', '需求分析', '商业化', '工作流', '多模态', '数据分析',
+            '用户研究', '项目管理', 'SaaS', 'B端产品', 'C端产品', '搜索推荐',
+            '增长实验', 'AIGC', '自动化', '机器人', '知识库', '交付落地'
+        ]));
+
+        function normalizeText(value) {
+            return String(value || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function escapeRegExp(value) {
+            return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        }
+
+        function uniqueList(items) {
+            return [...new Set(items.filter(Boolean))];
+        }
+
+        function splitSkillText(value) {
+            return uniqueList(
+                normalizeText(value)
+                    .split(/[,，、|/；;\n]/)
+                    .map(item => item.trim())
+                    .filter(item => item && item.length <= 14)
+            );
+        }
+
+        function getJobScale(job) {
+            return normalizeText(job.size || job.scale);
+        }
+
+        function getJobFinance(job) {
+            return normalizeText(job.finance || job.stage);
+        }
+
+        function getJobActiveTime(job) {
+            return normalizeText(job.activeTime || job.active_time);
+        }
+
+        function getJobLocation(job) {
+            const direct = normalizeText(job.area);
+            if (direct) return direct;
+            return [normalizeText(job.city), normalizeText(job.district)].filter(Boolean).join(' · ');
+        }
+
+        function getJobDetailText(job) {
+            return normalizeText(job.description || job.jdSummary || '');
+        }
+
+        function getJobWelfare(job) {
+            return normalizeText(job.welfare);
+        }
+
+        function isAiNativeCompany(job) {
+            return aiNativeCompanies.some(c => normalizeText(job.company).toLowerCase().includes(c.toLowerCase()));
+        }
+
+        function parseSalaryRange(salaryText) {
+            const salary = normalizeText(salaryText).toUpperCase();
+            const rangeMatch = salary.match(/(\d+)\s*-\s*(\d+)\s*K/);
+            if (rangeMatch) {
+                return { min: Number(rangeMatch[1]), max: Number(rangeMatch[2]) };
+            }
+            const overMatch = salary.match(/(\d+)\s*K以上/);
+            if (overMatch) {
+                return { min: Number(overMatch[1]), max: Number(overMatch[1]) + 10 };
+            }
+            const singleMatch = salary.match(/(\d+)\s*K/);
+            if (singleMatch) {
+                return { min: Number(singleMatch[1]), max: Number(singleMatch[1]) };
+            }
+            return { min: 0, max: 0 };
+        }
+
+        function extractSkillKeywords(job) {
+            const rawSkills = splitSkillText(job.skills);
+            const fullText = [
+                normalizeText(job.name),
+                normalizeText(job.skills),
+                getJobDetailText(job),
+                getJobWelfare(job),
+                normalizeText(job.industry)
+            ].join(' ').toLowerCase();
+
+            const matchedKeywords = jobSkillVocabulary.filter(keyword => fullText.includes(keyword.toLowerCase()));
+            return uniqueList([...rawSkills, ...matchedKeywords]).slice(0, 6);
+        }
+
+        function getResumeSkillHits(skillKeywords) {
+            return skillKeywords.filter(keyword =>
+                resumeSkills.some(skill =>
+                    skill.toLowerCase().includes(keyword.toLowerCase()) ||
+                    keyword.toLowerCase().includes(skill.toLowerCase())
+                )
+            );
+        }
+
+        function buildJobSummary(job, skillKeywords) {
+            const detailText = getJobDetailText(job);
+            let summary = '';
+
+            if (detailText.length >= 80) {
+                const sentences = detailText
+                    .split(/[。；;！!?]/)
+                    .map(sentence => normalizeText(sentence))
+                    .filter(sentence => sentence.length >= 10);
+                summary = sentences.slice(0, 3).join('。');
+                if (summary && !summary.endsWith('。')) summary += '。';
+            }
+
+            if (summary.length < 100) {
+                const fallbackParts = [
+                    `${normalizeText(job.company) || '该公司'}发布的${normalizeText(job.name) || '该岗位'}，当前薪资区间为${normalizeText(job.salary) || '面议'}，工作地点在${getJobLocation(job) || '目标城市'}。`,
+                    `岗位更看重${skillKeywords.length ? skillKeywords.join('、') : (normalizeText(job.skills) || '产品策略、需求分析、跨团队协作')}等能力，通常会考察候选人对业务场景的理解、数据判断和项目推动能力。`,
+                    `${normalizeText(job.experience) ? `经验要求偏向${normalizeText(job.experience)}` : '经验要求仍需补全'}${normalizeText(job.degree) ? `，学历要求为${normalizeText(job.degree)}` : ''}。${getJobScale(job) ? `公司规模约${getJobScale(job)}` : '当前公司规模字段缺失'}${getJobFinance(job) ? `，发展阶段为${getJobFinance(job)}` : ''}。`
+                ];
+                summary = fallbackParts.join('');
+            }
+
+            if (summary.length < 110) {
+                summary += ' 目前这条职位还缺少完整 JD 原文，建议先登录 Boss 后重新抓取详情，这样才能补齐职责描述、技能栈、业务目标和福利信息，匹配度也会更稳定。';
+            }
+
+            return summary;
+        }
+
+        function highlightKeywords(text, skillKeywords) {
+            let highlighted = escapeHtml(text);
+            skillKeywords.slice(0, 6).forEach(keyword => {
+                const pattern = new RegExp(escapeRegExp(keyword), 'gi');
+                highlighted = highlighted.replace(pattern, match => `<span class="summary-mark">${match}</span>`);
+            });
+            return highlighted;
+        }
+
+        function buildJobHighlights(job, skillKeywords) {
+            const detailText = getJobDetailText(job);
+            const highlightRows = [];
+
+            if (skillKeywords.length) {
+                highlightRows.push(`技能重点：${skillKeywords.slice(0, 4).join(' / ')}`);
+            }
+
+            if (normalizeText(job.skills)) {
+                highlightRows.push(`原始关键词：${normalizeText(job.skills)}`);
+            }
+
+            const detailSentences = detailText
+                .split(/[。；;！!?]/)
+                .map(sentence => normalizeText(sentence))
+                .filter(sentence =>
+                    sentence.length >= 12 &&
+                    /负责|要求|熟悉|经验|能力|策略|分析|产品|增长|协同|落地/.test(sentence)
+                );
+
+            detailSentences.slice(0, 2).forEach(sentence => highlightRows.push(sentence));
+
+            if (highlightRows.length < 3) {
+                highlightRows.push(`硬性条件：${normalizeText(job.experience) || '经验待补充'} · ${normalizeText(job.degree) || '学历不限'} · ${getJobLocation(job) || '城市待补充'}`);
+            }
+
+            if (highlightRows.length < 4 && getJobWelfare(job)) {
+                highlightRows.push(`福利亮点：${getJobWelfare(job)}`);
+            }
+
+            return uniqueList(highlightRows).slice(0, 4);
+        }
+
+        function getJobRiskTags(job) {
+            const title = normalizeText(job.name).toLowerCase();
+            const experience = normalizeText(job.experience).toLowerCase();
+            const riskTags = [];
+
+            if (title.includes('实习')) riskTags.push('实习岗');
+            if (title.includes('校招') || experience.includes('在校') || experience.includes('应届')) riskTags.push('校招/应届');
+            if (normalizeText(job.degree).includes('博士')) riskTags.push('博士门槛');
+
+            return riskTags;
+        }
+
+        function buildJobTags(job, skillKeywords, showActiveTag) {
+            const tags = [];
+
+            if (isAiNativeCompany(job)) tags.push({ tone: 'ai', text: 'AI Native' });
+            if (getJobScale(job)) tags.push({ tone: 'size', text: getJobScale(job) });
+            if (getJobFinance(job)) tags.push({ tone: 'finance', text: getJobFinance(job) });
+            if (showActiveTag && getJobActiveTime(job)) tags.push({ tone: 'active', text: `HR ${getJobActiveTime(job)}` });
+            if (skillKeywords.length) tags.push({ tone: 'match', text: `技能匹配 ${skillKeywords.length} 项` });
+            getJobRiskTags(job).forEach(tag => tags.push({ tone: 'risk', text: tag }));
+
+            return tags.slice(0, 6);
+        }
+
+        function calculateMatchScore(job, skillKeywords) {
+            const title = normalizeText(job.name).toLowerCase();
+            const experience = normalizeText(job.experience).toLowerCase();
+            const location = getJobLocation(job).toLowerCase();
+            const salary = parseSalaryRange(job.salary);
+            const resumeHits = getResumeSkillHits(skillKeywords);
+            const reasons = [];
+            let score = 56;
+
+            if (title.includes('ai') || title.includes('llm') || title.includes('大模型')) {
+                score += 12;
+                reasons.push('AI方向');
+            }
+            if (title.includes('产品')) {
+                score += 10;
+                reasons.push('产品主线');
+            } else if (title.includes('策略') || title.includes('增长') || title.includes('运营')) {
+                score += 8;
+                reasons.push('策略/运营');
+            }
+
+            if (resumeHits.length) {
+                score += Math.min(22, resumeHits.length * 5);
+                reasons.push(`命中${resumeHits.length}项技能`);
+            }
+
+            if (salary.min >= 20) {
+                score += 8;
+                reasons.push('薪资达标');
+            } else if (salary.min >= 15) {
+                score += 5;
+            }
+
+            if (location.includes('北京')) {
+                score += 6;
+                reasons.push('目标城市');
+                if (location.includes('朝阳')) score += 2;
+            } else if (location.includes('杭州') || location.includes('上海') || location.includes('深圳')) {
+                score += 3;
+            }
+
+            if (getJobDetailText(job).length >= 80) {
+                score += 6;
+                reasons.push('JD完整');
+            } else {
+                score -= 4;
+            }
+
+            if (getJobScale(job)) score += 3;
+            if (getJobFinance(job)) score += 3;
+            if (getJobActiveTime(job) && !getJobActiveTime(job).includes('月内')) score += 2;
+
+            if (title.includes('实习')) {
+                score -= 18;
+                reasons.push('实习岗');
+            }
+            if (title.includes('校招') || experience.includes('在校') || experience.includes('应届')) {
+                score -= 10;
+                reasons.push('校招属性');
+            }
+            if (normalizeText(job.degree).includes('博士')) {
+                score -= 12;
+                reasons.push('博士门槛');
+            }
+
+            score = Math.max(45, Math.min(score, 96));
+            const label = score >= 85 ? '强推荐' : (score >= 75 ? '值得优先投' : (score >= 65 ? '可重点关注' : '保留观察'));
+
+            return {
+                score,
+                label,
+                reasons: uniqueList(reasons).slice(0, 4)
+            };
+        }
+
+        function normalizeJob(job, index) {
+            const skillKeywords = extractSkillKeywords(job);
+            const scoreMeta = calculateMatchScore(job, skillKeywords);
+            return {
+                ...job,
+                skillKeywords,
+                jdSummary: buildJobSummary(job, skillKeywords),
+                highlightRows: buildJobHighlights(job, skillKeywords),
+                riskTags: getJobRiskTags(job),
+                _score: scoreMeta.score,
+                _scoreMeta: scoreMeta,
+                _hasDetail: getJobDetailText(job).length >= 80,
+                _originalIndex: index
+            };
+        }
+
+        function renderInsightStrip(visibleJobs, detailCoverageCount, showActiveTag) {
+            const salaryQualifiedCount = visibleJobs.filter(job => parseSalaryRange(job.salary).min >= 20).length;
+            const aiFocusedCount = visibleJobs.filter(job => /ai|llm|大模型/i.test(normalizeText(job.name))).length;
+            const skillRichCount = visibleJobs.filter(job => job.skillKeywords.length >= 3).length;
+
+            return `
+                <div class="jobs-insight-strip">
+                    <div class="insight-card">
+                        <div class="insight-card-label">展示岗位</div>
+                        <div class="insight-card-value">${visibleJobs.length}</div>
+                        <div class="insight-card-desc">这版不再把岗位直接过滤掉，先保证你能稳定看到至少 20 条，再通过标签区分风险项。</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-card-label">完整 JD 覆盖</div>
+                        <div class="insight-card-value">${detailCoverageCount}/${visibleJobs.length}</div>
+                        <div class="insight-card-desc">抓到详情的岗位会展示更长摘要和更明确的技能重点，评分也会更稳定。</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-card-label">20K+ 薪资</div>
+                        <div class="insight-card-value">${salaryQualifiedCount}</div>
+                        <div class="insight-card-desc">优先保留了更符合你目标薪资带的岗位，避免低薪岗位把推荐列表稀释掉。</div>
+                    </div>
+                    <div class="insight-card">
+                        <div class="insight-card-label">技能清晰度</div>
+                        <div class="insight-card-value">${skillRichCount}</div>
+                        <div class="insight-card-desc">${showActiveTag ? 'HR 活跃度出现差异时才会单独展示，不再把“今日活跃”刷成整屏红标签。' : '当前活跃度字段几乎一致，所以我把它降级成辅助信息，不再抢视觉注意力。'}</div>
+                    </div>
+                </div>
+            `;
+        }
+
         function loadSavedResume() {
             const saved = localStorage.getItem('editedResume_' + currentTargetJob);
             if (saved) return JSON.parse(saved);
@@ -294,72 +706,84 @@
                 return;
             }
 
-            // 按匹配分数排序
-            const sortedJobs = [...currentJobs].map((job, index) => ({
-                ...job,
-                _score: calculateMatchScore(job),
-                _originalIndex: index
-            })).sort((a, b) => b._score - a._score);
+            const normalizedJobs = currentJobs
+                .map((job, index) => normalizeJob(job, index))
+                .sort((a, b) => b._score - a._score);
 
-            let html = '';
-            let filteredCount = 0;
-            let excludedJobs = [];
-            sortedJobs.forEach((job, index) => {
-                // 硬性过滤检查
-                if (shouldFilterJob(job)) {
-                    excludedJobs.push(job);
-                    return;
-                }
-                filteredCount++;
-                const rank = filteredCount;
-                const rankClass = rank <= 2 ? 'gold' : (rank <= 5 ? 'silver' : 'bronze');
-                const score = job._score;
+            const visibleJobs = normalizedJobs.length <= 20 ? normalizedJobs : normalizedJobs.slice(0, 20);
+            const activeValues = uniqueList(visibleJobs.map(job => getJobActiveTime(job)));
+            const showActiveTag = activeValues.length > 1;
+            const detailCoverageCount = visibleJobs.filter(job => job._hasDetail).length;
 
-                // 获取公司信息和融资状态
-                const companySize = job.size || '未知';
-                const companyFinance = job.finance || '';
-                const activeTime = job.activeTime || '今日活跃';
-                const isAiNative = aiNativeCompanies.some(c => (job.company || '').toLowerCase().includes(c.toLowerCase())) ? '<span class="ai-native-badge">AI Native</span>' : '';
+            visibleJobs.forEach(job => {
+                job.tags = buildJobTags(job, job.skillKeywords, showActiveTag);
+            });
+
+            let html = renderInsightStrip(visibleJobs, detailCoverageCount, showActiveTag);
+
+            if (detailCoverageCount < Math.ceil(visibleJobs.length * 0.6)) {
+                html += `<div class="data-warning">当前大部分岗位还是基础搜索结果，完整 JD 抓取覆盖不足。想拿到你提到的“100 字以上岗位概括、明确技能要求、公司规模/融资/HR 活跃度标签”，需要先让 Boss 抓取链路处于已登录且可连接状态，然后重新执行抓取任务。</div>`;
+            }
+
+            visibleJobs.forEach((job, index) => {
+                const scoreMeta = job._scoreMeta;
+                const tagHtml = job.tags.map(tag => `<span class="job-tag ${tag.tone}">${escapeHtml(tag.text)}</span>`).join('');
+                const highlightHtml = job.highlightRows.map(row => `<div class="highlight-row">${highlightKeywords(row, job.skillKeywords)}</div>`).join('');
+                const summaryHtml = highlightKeywords(job.jdSummary, job.skillKeywords);
+                const rankClass = index < 3 ? 'top-3' : (index < 10 ? 'top-10' : '');
+                const bossMeta = [normalizeText(job.boss), normalizeText(job.bossTitle || job.boss_title)].filter(Boolean).join(' · ');
 
                 html += `
-                    <div class="job-row">
-                        <div class="rank ${rankClass}">${rank}</div>
-                        <div class="job-main">
-                            <div class="job-header-row">
-                                <div class="company-name">${job.company || '未知公司'}</div>
-                                ${isAiNative}
+                    <article class="job-card">
+                        <div class="job-card-main">
+                            <div class="job-card-top">
+                                <div class="rank-chip ${rankClass}">#${index + 1}</div>
+                                <div>
+                                    <div class="company-line">
+                                        <div class="company-name">${escapeHtml(normalizeText(job.company) || '未知公司')}</div>
+                                    </div>
+                                    <h3 class="job-title">${escapeHtml(normalizeText(job.name) || '职位名称')}</h3>
+                                    <div class="job-meta-line">
+                                        <span class="meta-pill">📍 ${escapeHtml(getJobLocation(job) || '城市待补充')}</span>
+                                        <span class="meta-pill">👤 ${escapeHtml(bossMeta || 'Boss 信息待补充')}</span>
+                                        <span class="meta-pill">🎓 ${escapeHtml(normalizeText(job.experience) || '经验不限')} · ${escapeHtml(normalizeText(job.degree) || '学历不限')}</span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="job-title">${job.name || '职位名称'}</div>
-                            <div class="company-meta">
-                                <span class="meta-item">📍 ${job.area || '北京'}</span>
-                                <span class="meta-item">🏢 ${companySize}</span>
-                                ${companyFinance ? `<span class="meta-item">💰 ${companyFinance}</span>` : ''}
+                            <div class="job-tags">${tagHtml}</div>
+                            <div class="job-summary">${summaryHtml}</div>
+                            <div class="job-highlights">${highlightHtml}</div>
+                        </div>
+                        <aside class="job-card-side">
+                            <div class="job-side-panel">
+                                <div class="salary-main">${escapeHtml(normalizeText(job.salary) || '薪资面议')}</div>
+                                <div class="salary-sub">岗位匹配会优先考虑薪资、技能关键词、JD 完整度和城市优先级。</div>
                             </div>
-                            <div class="active-badge ${activeTime.includes('今日') ? 'today' : (activeTime.includes('3天') ? 'recent' : '')}">${activeTime}</div>
-                        </div>
-                        <div class="salary">${job.salary || '薪资面议'}</div>
-                        <div class="job-desc">
-                            ${job.skills ? `<span class="highlight">技能：${job.skills}</span><br>` : ''}
-                            <span class="highlight">经验：${job.experience || '不限'}</span><br>
-                            <span class="highlight">学历：${job.degree || '不限'}</span><br>
-                            <span class="highlight">Boss：${job.boss || '未知'}</span>
-                        </div>
-                        <div class="score">
-                            <div class="score-value">${score}</div>
-                            <div class="score-bar"><div class="score-bar-fill" style="width:${score}%;"></div></div>
-                        </div>
-                        <div><a href="${job.url || '#'}" class="action-btn" target="_blank">立即投递</a></div>
-                    </div>
+                            <div class="job-side-panel">
+                                <div class="score-panel">
+                                    <div>
+                                        <div class="score-value">${scoreMeta.score}</div>
+                                        <div class="score-label">${escapeHtml(scoreMeta.label)}</div>
+                                    </div>
+                                </div>
+                                <div class="score-bar"><div class="score-bar-fill" style="width:${scoreMeta.score}%;"></div></div>
+                                <div class="score-reasons">${scoreMeta.reasons.map(reason => `<span class="score-reason">${escapeHtml(reason)}</span>`).join('')}</div>
+                            </div>
+                            <div class="job-side-panel">
+                                <div class="detail-list">
+                                    <div><strong>技能命中：</strong>${escapeHtml(job.skillKeywords.join('、') || '待补充')}</div>
+                                    <div><strong>公司信息：</strong>${escapeHtml(getJobScale(job) || '规模待补充')}${getJobFinance(job) ? ` · ${escapeHtml(getJobFinance(job))}` : ''}</div>
+                                    <div><strong>数据完整度：</strong>${job._hasDetail ? '已抓到详细 JD' : '仅基础搜索结果'}</div>
+                                </div>
+                            </div>
+                            <div><a href="${job.url || '#'}" class="action-btn" target="_blank">查看原始岗位</a></div>
+                        </aside>
+                    </article>
                 `;
             });
 
-            // 显示过滤信息
-            if (excludedJobs.length > 0) {
-                html += `<div class="filter-info">🚫 已过滤 ${excludedJobs.length} 个不符合条件的职位（实习/应届/经验要求过高/博士学历）</div>`;
-            }
-
             const updateTime = getCurrentLastUpdated();
-            html += `<div class="job-updated">📅 数据更新时间：${updateTime} | 共 ${filteredCount} 个优质职位</div>`;
+            html += `<div class="job-updated">数据更新时间：${updateTime} ｜ 当前展示 ${visibleJobs.length} 个岗位 ｜ 完整 JD ${detailCoverageCount} 个</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
 
@@ -368,28 +792,29 @@
             const selectorListContent = document.getElementById('selectorListContent');
             targetJobSelect.innerHTML = '<option value="">-- 从推荐职位中选择 --</option>';
             selectorListContent.innerHTML = '';
-            sortedJobs.forEach((job, index) => {
+            visibleJobs.forEach((job, index) => {
                 // 填充下拉框
                 const option = document.createElement('option');
                 option.value = job._originalIndex;
-                option.textContent = `${job.company} - ${job.name} (匹配度${job._score}分)`;
+                option.textContent = `${job.company} - ${job.name}（${job._scoreMeta.label} ${job._score}分）`;
                 targetJobSelect.appendChild(option);
 
                 // 填充可点击列表
                 const btn = document.createElement('button');
                 btn.className = 'job-select-btn';
                 btn.dataset.index = job._originalIndex;
-                btn.innerHTML = `${job.company} - ${job.name} <span class="job-score">${job._score}分</span>`;
+                btn.innerHTML = `${job.company} - ${job.name} <span class="job-score">${job._scoreMeta.label} · ${job._score}分</span>`;
                 btn.onclick = function() {
                     selectJob(job._originalIndex);
                 };
                 selectorListContent.appendChild(btn);
             });
-            recommendedJobs = sortedJobs;
+            recommendedJobs = visibleJobs;
         }
 
         // 选择岗位
         function selectJob(index) {
+            if (Number.isNaN(index)) return;
             currentTargetJob = index.toString();
             const currentJobs = getCurrentJobs();
             // 更新下拉框
@@ -408,24 +833,6 @@
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
         }
 
-        // 过滤硬性不符合的职位
-        function shouldFilterJob(job) {
-            const jobName = (job.name || '').toLowerCase();
-            const exp = (job.experience || '').toLowerCase();
-            const degree = (job.degree || '').toLowerCase();
-
-            // 过滤：职位名称包含"实习"
-            if (jobName.includes('实习')) return true;
-            // 过滤：职位名称包含"应届"
-            if (jobName.includes('应届')) return true;
-            // 过滤：经验要求3年及以上（3-5年、5年、10年等）
-            if (exp.includes('3-5') || exp.includes('5年') || exp.includes('10年') || exp.includes('5-10')) return true;
-            // 过滤：学历要求博士
-            if (degree.includes('博士')) return true;
-
-            return false;
-        }
-
         // AI Native 公司列表
         const aiNativeCompanies = [
             'minimax', '智谱', 'kimi', '月之暗面', 'moonshot', 'deepseek',
@@ -433,159 +840,59 @@
             'Zhipu', 'Moonshot', 'DeepSeek', 'Baichuan'
         ];
 
-        // 计算匹配度分数
-        function calculateMatchScore(job) {
-            let score = 0;
-
-            // ========== 加分项 ==========
-
-            // 1. HR最近活跃（默认+15，因为大部分职位都是活跃的）
-            if (job.activeTime && (job.activeTime.includes('今日') || job.activeTime.includes('刚刚') || job.activeTime.includes('3天内'))) {
-                score += 15;
-            }
-
-            // 2. 工作地点加分
-            const area = (job.area || '北京').toLowerCase();
-            if (area.includes('朝阳')) {
-                score += 15; // 北京朝阳区最高优先级
-            } else if (area.includes('北京')) {
-                score += 10; // 北京（非朝阳）
-            } else if (area.includes('杭州')) {
-                score += 8;
-            } else if (area.includes('上海')) {
-                score += 5;
-            } else if (area.includes('深圳') || area.includes('广州')) {
-                score += 3;
-            } else {
-                score -= 10; // 其他城市
-            }
-
-            // 3. 公司规模1000人以上
-            const size = (job.size || '').toLowerCase();
-            if (size.includes('1000') || size.includes('2000') || size.includes('5000') || size.includes('10000') ||
-                size.includes('万人') || size.includes('5001-10000') || size.includes('10000以上')) {
-                score += 10;
-            }
-
-            // 4. 融资B轮及以上
-            const finance = (job.finance || '').toLowerCase();
-            if (finance.includes('b轮') || finance.includes('c轮') || finance.includes('d轮') ||
-                finance.includes('上市公司') || finance.includes('战略融资') || finance.includes('已上市')) {
-                score += 10;
-            } else if (finance.includes('a轮') || finance.includes('天使') || finance.includes('未融资')) {
-                score -= 10;
-            }
-
-            // 5. AI Native公司
-            const companyName = (job.company || '').toLowerCase();
-            for (const aiCompany of aiNativeCompanies) {
-                if (companyName.includes(aiCompany.toLowerCase())) {
-                    score += 20;
-                    break;
-                }
-            }
-
-            // 6. 职位名称包含AI相关
-            const jobName = (job.name || '').toLowerCase();
-            if (jobName.includes('ai') || jobName.includes('人工智能') || jobName.includes('大模型') || jobName.includes('llm')) {
-                score += 20;
-            } else if (jobName.includes('产品经理')) {
-                score += 15;
-            } else if (jobName.includes('策略') || jobName.includes('增长')) {
-                score += 10;
-            } else if (jobName.includes('运营')) {
-                score += 8;
-            }
-
-            // 7. 技能匹配度
-            const resumeKeywords = [
-                'AI', 'Agent', 'RAG', 'A/B', '测试', 'SQL', '数据',
-                '分析', '用户增长', '产品经理', 'Prompt', '大模型',
-                'LLM', '机器人', '运营', '策略', '增长', '算法'
-            ];
-            const skills = (job.skills || '').toLowerCase();
-            let skillMatchCount = 0;
-            resumeKeywords.forEach(kw => {
-                if (skills.includes(kw.toLowerCase())) skillMatchCount++;
-            });
-            score += Math.min(skillMatchCount * 5, 30);
-
-            // 8. 薪资范围 ≥15k
-            const salary = (job.salary || '').toLowerCase();
-            if (salary.includes('15') || salary.includes('20') || salary.includes('25') || salary.includes('30')) {
-                score += 5;
-            }
-
-            // 9. 经验要求1-3年
-            const exp = (job.experience || '').toLowerCase();
-            if (exp.includes('1-3') || exp.includes('1年') || exp.includes('2年')) {
-                score += 5;
-            }
-
-            return Math.max(0, Math.min(score, 100)); // 确保分数在0-100之间
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             renderJobs();
             document.getElementById('targetJob').addEventListener('change', function() {
-                selectJob(parseInt(this.value));
+                if (!this.value) return;
+                selectJob(parseInt(this.value, 10));
             });
         });
 
         // 根据职位要求生成AI优化建议
         function generateOptimizationTips(job) {
+            if (!job) {
+                return ['请先选择目标岗位，系统会根据岗位关键词和 JD 摘要生成更细的简历优化建议。'];
+            }
+
+            const normalizedJob = normalizeJob(job, 0);
             const tips = [];
-            const jobName = (job.name || '').toLowerCase();
-            const jobSkills = (job.skills || '').toLowerCase();
-            const jobDesc = (job.name || '') + ' ' + (job.skills || '') + ' ' + (job.experience || '');
+            const jobName = normalizeText(job.name).toLowerCase();
+            const skillKeywords = normalizedJob.skillKeywords;
+            const resumeHits = getResumeSkillHits(skillKeywords);
 
-            // 职位方向匹配
-            if (jobName.includes('ai') || jobName.includes('产品经理')) {
-                tips.push('突出AI Agent构建经验（航班助手、延误分析等6+ Agent）');
-                tips.push('展示回答正确率从58%→87%的成果');
-                tips.push('强调Dify/Coze平台使用和Prompt调优能力');
+            if (resumeHits.length) {
+                tips.push(`把 ${resumeHits.slice(0, 3).join('、')} 放进简历标题或首屏技能区，先和岗位技能标签对齐。`);
             }
 
-            if (jobName.includes('运营') || jobName.includes('策略')) {
-                tips.push('强调数据策略增长经验（A/B实验、点击率翻倍）');
-                tips.push('突出用户分层和RFM模型应用能力');
-                tips.push('展示内容运营和用户增长方法论');
+            if (skillKeywords.length) {
+                tips.push(`工作经历里优先补充 ${skillKeywords.slice(0, 4).join('、')} 相关案例，最好每条都带结果数据或业务影响。`);
             }
 
-            // 技能匹配
-            if (jobSkills.includes('b端') || jobSkills.includes('b端产品')) {
-                tips.push('强调B端产品经验和客户需求理解');
-                tips.push('突出大客户对接和跨部门协调能力');
+            if (jobName.includes('ai') || jobName.includes('产品')) {
+                tips.push('重点突出 AI Agent、Prompt 调优、需求拆解和跨团队推进这几类能力，不要只写通用运营动作。');
             }
 
-            if (jobSkills.includes('c端') || jobSkills.includes('c端产品')) {
-                tips.push('展示用户增长和DAU提升经验');
-                tips.push('突出激励玩法设计和数据驱动决策');
+            if (jobName.includes('策略') || jobName.includes('增长') || jobName.includes('运营')) {
+                tips.push('把 A/B 实验、用户分层、策略优化、增长结果写成“动作 + 指标提升”的句式，能明显提升岗位说服力。');
             }
 
-            // 通用建议
-            const resumeText = JSON.stringify(resumeData).toLowerCase();
+            if (parseSalaryRange(job.salary).min >= 20) {
+                tips.push('这类薪资带通常更看重业务结果，建议把点击率、转化率、正确率、效率提升这类数字往前放。');
+            }
 
-            // 检查是否需要强调学历
+            if (!normalizedJob._hasDetail) {
+                tips.push('当前岗位还没抓到完整 JD，建议登录 Boss 后重新抓取一次，这样技能要求和职责边界会更清楚。');
+            }
+
             if ((job.degree || '').includes('本科')) {
-                tips.push('突出北京邮电大学硕士学历和211背景');
+                tips.push('教育背景里继续保留北邮硕士和 211 标签，这类岗位通常默认把学历当成第一轮筛选条件。');
             }
 
-            // 检查是否需要强调创业项目
-            if (jobName.includes('创业') || jobName.includes('独立')) {
-                tips.push('展示AI求职辅导App从0到1的独立开发经验');
+            if (tips.length < 4) {
+                tips.push('把“日均流量 10w+、回答正确率 58→87%、点击率提升”等结果型表述前置，减少空泛职责描述。');
             }
 
-            // 如果建议太少，补充通用建议
-            if (tips.length < 3) {
-                tips.push('强调日均流量10w+的C端产品经验');
-                tips.push('展示SQL数据分析和A/B Test实验设计能力');
-                tips.push('体现10+业务方跨团队协作经验');
-            }
-
-            // 去重并限制3-5条
-            const uniqueTips = [...new Set(tips)].slice(0, 5);
-            return uniqueTips;
+            return uniqueList(tips).slice(0, 5);
         }
 
         function startOptimization() {
