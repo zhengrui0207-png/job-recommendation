@@ -416,6 +416,79 @@
             return aiNativeCompanies.some(c => normalizeText(job.company).toLowerCase().includes(c.toLowerCase()));
         }
 
+        function parseCompanyScale(scaleText) {
+            const text = normalizeText(scaleText);
+            if (!text) return { min: null, max: null, known: false };
+            if (text.includes('100人以下')) return { min: 0, max: 99, known: true };
+
+            const rangeMatch = text.match(/(\d+)\s*[-~]\s*(\d+)人/);
+            if (rangeMatch) {
+                return { min: Number(rangeMatch[1]), max: Number(rangeMatch[2]), known: true };
+            }
+
+            const overMatch = text.match(/(\d+)人以上/);
+            if (overMatch) {
+                const min = Number(overMatch[1]);
+                return { min, max: min, known: true };
+            }
+
+            return { min: null, max: null, known: false };
+        }
+
+        function getExperienceLevel(job) {
+            const experience = normalizeText(job.experience).toLowerCase();
+            if (!experience) return 'unknown';
+            if (experience.includes('在校') || experience.includes('应届')) return 'campus';
+            if (experience.includes('经验不限')) return 'open';
+            if (experience.includes('1年以内')) return 'under-1';
+            if (/3年以上|5年以上|10年以上/.test(experience)) return '3-plus';
+
+            const rangeMatch = experience.match(/(\d+)\s*[-~]\s*(\d+)年/);
+            if (rangeMatch) {
+                const min = Number(rangeMatch[1]);
+                const max = Number(rangeMatch[2]);
+                if (max <= 3) return '1-3';
+                if (min >= 3 || max > 3) return '3-plus';
+            }
+
+            return 'unknown';
+        }
+
+        function getHrActivityLevel(job) {
+            const activeText = getJobActiveTime(job);
+            if (!activeText) return 'unknown';
+            if (/刚刚|今日|今天|在线/.test(activeText)) return 'today';
+            if (/3天内|三天内|近3日/.test(activeText)) return 'recent';
+
+            const dayMatch = activeText.match(/(\d+)天/);
+            if (dayMatch) {
+                return Number(dayMatch[1]) <= 3 ? 'recent' : 'stale';
+            }
+
+            if (/周前|月前|月内|较久/.test(activeText)) return 'stale';
+            if (/本周/.test(activeText)) return 'unknown';
+            return 'unknown';
+        }
+
+        function getLocationPriorityScore(job) {
+            const location = getJobLocation(job);
+            if (!location) return 0;
+            if (location.includes('北京') && location.includes('朝阳')) return 15;
+            if (location.includes('北京')) return 10;
+            if (location.includes('杭州')) return 8;
+            if (location.includes('上海')) return 5;
+            if (location.includes('深圳') || location.includes('广州')) return 3;
+            return -10;
+        }
+
+        function getFinanceScore(job) {
+            const finance = getJobFinance(job);
+            if (!finance) return 0;
+            if (/已上市|上市|B轮|C轮|D轮|战略融资/.test(finance)) return 10;
+            if (/A轮|天使轮/.test(finance)) return -10;
+            return 0;
+        }
+
         function parseSalaryRange(salaryText) {
             const salary = normalizeText(salaryText).toUpperCase();
             const rangeMatch = salary.match(/(\d+)\s*-\s*(\d+)\s*K/);
@@ -531,33 +604,44 @@
             const title = normalizeText(job.name).toLowerCase();
             const experience = normalizeText(job.experience).toLowerCase();
             const riskTags = [];
+            const scaleMeta = parseCompanyScale(getJobScale(job));
+            const hrActivityLevel = getHrActivityLevel(job);
 
             if (title.includes('实习')) riskTags.push('实习岗');
             if (title.includes('校招') || experience.includes('在校') || experience.includes('应届')) riskTags.push('校招/应届');
+            if (title.includes('外派')) riskTags.push('外派风险');
             if (normalizeText(job.degree).includes('博士')) riskTags.push('博士门槛');
+            if (scaleMeta.known && scaleMeta.max < 100) riskTags.push('公司规模偏小');
+            if (hrActivityLevel === 'stale') riskTags.push('HR活跃度偏低');
 
             return riskTags;
         }
 
         function isSocialHireJob(job) {
             const title = normalizeText(job.name).toLowerCase();
-            const experience = normalizeText(job.experience).toLowerCase();
+            const degree = normalizeText(job.degree);
+            const experienceLevel = getExperienceLevel(job);
+            const scaleMeta = parseCompanyScale(getJobScale(job));
+            const hrActivityLevel = getHrActivityLevel(job);
 
-            if (title.includes('校招') || title.includes('应届') || title.includes('实习') || title.includes('管培')) return false;
-            if (experience.includes('在校') || experience.includes('应届')) return false;
-            if (experience.includes('5-10') || experience.includes('10年')) return false;
+            if (title.includes('校招') || title.includes('应届') || title.includes('实习') || title.includes('管培') || title.includes('外派')) return false;
+            if (degree.includes('博士')) return false;
+            if (experienceLevel === 'campus' || experienceLevel === '3-plus') return false;
+            if (scaleMeta.known && scaleMeta.max < 100) return false;
+            if (hrActivityLevel === 'stale') return false;
 
             return true;
         }
 
         function buildJobTags(job, skillKeywords, showActiveTag) {
             const tags = [];
+            const resumeSkillHits = getResumeSkillHits(skillKeywords);
 
             if (isAiNativeCompany(job)) tags.push({ tone: 'ai', text: 'AI Native' });
             if (getJobScale(job)) tags.push({ tone: 'size', text: getJobScale(job) });
             if (getJobFinance(job)) tags.push({ tone: 'finance', text: getJobFinance(job) });
             if (showActiveTag && getJobActiveTime(job)) tags.push({ tone: 'active', text: `HR ${getJobActiveTime(job)}` });
-            if (skillKeywords.length) tags.push({ tone: 'match', text: `技能匹配 ${skillKeywords.length} 项` });
+            if (resumeSkillHits.length) tags.push({ tone: 'match', text: `技能匹配 ${resumeSkillHits.length} 项` });
             getJobRiskTags(job).forEach(tag => tags.push({ tone: 'risk', text: tag }));
 
             return tags.slice(0, 6);
@@ -565,76 +649,38 @@
 
         function calculateMatchScore(job, skillKeywords) {
             const title = normalizeText(job.name).toLowerCase();
-            const experience = normalizeText(job.experience).toLowerCase();
-            const location = getJobLocation(job).toLowerCase();
             const salary = parseSalaryRange(job.salary);
             const resumeHits = getResumeSkillHits(skillKeywords);
-            const reasons = [];
-            let score = 56;
+            const scaleMeta = parseCompanyScale(getJobScale(job));
+            const experienceLevel = getExperienceLevel(job);
+            const hrActivityLevel = getHrActivityLevel(job);
+            let rawScore = 0;
 
-            if (title.includes('ai') || title.includes('llm') || title.includes('大模型')) {
-                score += 12;
-                reasons.push('AI方向');
-            }
-            if (title.includes('产品')) {
-                score += 10;
-                reasons.push('产品主线');
-            } else if (title.includes('策略') || title.includes('增长') || title.includes('运营')) {
-                score += 8;
-                reasons.push('策略/运营');
-            }
+            if (hrActivityLevel === 'today' || hrActivityLevel === 'recent') rawScore += 15;
+            rawScore += getLocationPriorityScore(job);
 
-            if (resumeHits.length) {
-                score += Math.min(22, resumeHits.length * 5);
-                reasons.push(`命中${resumeHits.length}项技能`);
-            }
+            if (scaleMeta.known && scaleMeta.min >= 1000) rawScore += 10;
+            rawScore += getFinanceScore(job);
 
-            if (salary.min >= 20) {
-                score += 8;
-                reasons.push('薪资达标');
-            } else if (salary.min >= 15) {
-                score += 5;
-            }
+            if (isAiNativeCompany(job)) rawScore += 20;
+            if (title.includes('ai') || title.includes('人工智能') || title.includes('大模型') || title.includes('llm')) rawScore += 20;
+            if (title.includes('产品经理')) rawScore += 15;
+            if (title.includes('策略') || title.includes('增长')) rawScore += 10;
+            if (title.includes('运营')) rawScore += 8;
 
-            if (location.includes('北京')) {
-                score += 6;
-                reasons.push('目标城市');
-                if (location.includes('朝阳')) score += 2;
-            } else if (location.includes('杭州') || location.includes('上海') || location.includes('深圳')) {
-                score += 3;
-            }
+            rawScore += Math.min(30, resumeHits.length * 5);
 
-            if (getJobDetailText(job).length >= 80) {
-                score += 6;
-                reasons.push('JD完整');
-            } else {
-                score -= 4;
-            }
+            if (salary.min >= 15) rawScore += 5;
+            if (experienceLevel === '1-3') rawScore += 5;
 
-            if (getJobScale(job)) score += 3;
-            if (getJobFinance(job)) score += 3;
-            if (getJobActiveTime(job) && !getJobActiveTime(job).includes('月内')) score += 2;
-
-            if (title.includes('实习')) {
-                score -= 18;
-                reasons.push('实习岗');
-            }
-            if (title.includes('校招') || experience.includes('在校') || experience.includes('应届')) {
-                score -= 10;
-                reasons.push('校招属性');
-            }
-            if (normalizeText(job.degree).includes('博士')) {
-                score -= 12;
-                reasons.push('博士门槛');
-            }
-
-            score = Math.max(45, Math.min(score, 96));
-            const label = score >= 85 ? '强推荐' : (score >= 75 ? '值得优先投' : (score >= 65 ? '可重点关注' : '保留观察'));
+            const score = Math.max(40, Math.min(98, Math.round(45 + rawScore * 0.45)));
+            const label = score >= 88 ? '强推荐' : (score >= 78 ? '优先投递' : (score >= 68 ? '值得关注' : '可作补充'));
 
             return {
                 score,
                 label,
-                reasons: uniqueList(reasons).slice(0, 4)
+                rawScore,
+                resumeHits
             };
         }
 
@@ -644,6 +690,7 @@
             return {
                 ...job,
                 skillKeywords,
+                resumeSkillHits: scoreMeta.resumeHits,
                 jdSummary: buildJobSummary(job, skillKeywords),
                 highlightRows: buildJobHighlights(job, skillKeywords),
                 riskTags: getJobRiskTags(job),
@@ -684,10 +731,9 @@
             const visibleJobs = eligibleJobs.length <= 20 ? eligibleJobs : eligibleJobs.slice(0, 20);
             const activeValues = uniqueList(visibleJobs.map(job => getJobActiveTime(job)));
             const showActiveTag = activeValues.length > 1;
-            const detailCoverageCount = visibleJobs.filter(job => job._hasDetail).length;
 
             if (!visibleJobs.length) {
-                container.innerHTML = `<div class="empty-state">当前抓取结果里没有符合社招条件的岗位，所以我没有把校招/应届职位硬塞进列表。下一步需要重新按“社招”关键词抓取新数据；抓到后这里会只展示真正可投的岗位。</div>`;
+                container.innerHTML = `<div class="empty-state">当前抓取结果里，没有同时满足“社招、HR 活跃、公司规模不低于 100 人、经验不高于 3 年、非外派/非应届/非实习”的岗位。我没有把不符合条件的职位硬塞进列表；后续只要继续补抓更准确的数据，这里会优先展示真正可投的岗位。</div>`;
                 document.getElementById('updateTime').textContent = getCurrentLastUpdated();
                 return;
             }
@@ -742,7 +788,7 @@
                             </div>
                             <div class="job-side-panel">
                                 <div class="detail-list">
-                                    <div><strong>技能命中：</strong>${escapeHtml(job.skillKeywords.join('、') || '待补充')}</div>
+                                    <div><strong>技能命中：</strong>${escapeHtml(job.resumeSkillHits.join('、') || '待补充')}</div>
                                     <div><strong>公司规模：</strong>${escapeHtml(getJobScale(job) || '待补充')}</div>
                                     <div><strong>融资阶段：</strong>${escapeHtml(getJobFinance(job) || '待补充')}</div>
                                 </div>
@@ -754,7 +800,7 @@
             });
 
             const updateTime = getCurrentLastUpdated();
-            html += `<div class="job-updated">数据更新时间：${updateTime} ｜ 社招岗位 ${visibleJobs.length} 个 ｜ 完整 JD ${detailCoverageCount} 个</div>`;
+            html += `<div class="job-updated">数据更新时间：${updateTime} ｜ 当前展示符合规则岗位 ${visibleJobs.length} 个</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
 
