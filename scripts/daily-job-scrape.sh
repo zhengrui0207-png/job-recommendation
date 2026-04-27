@@ -1,74 +1,122 @@
-#!/bin/bash
-# Daily Job Scraper - Runs at 10 AM via launchd
-# Scrapes jobs from Boss直聘 and updates the website
+#!/usr/bin/env python3
+"""
+Boss直聘职位抓取脚本
+- 薪资15k以上，不限上限
+- 多关键词：北京优先35条，再杭州/深圳/上海
+- 每次最多50条
+"""
 
-set -e
-
-PROJECT_DIR="/Users/zhengrui/.newmax/workspace/job-recommendation"
-LOG_FILE="$PROJECT_DIR/scripts/job-scrape.log"
-DATA_FILE="$PROJECT_DIR/scripts/job_data.json"
-JOBS_FILE="$PROJECT_DIR/jobs.js"
-
-echo "=== Job Scrape Started: $(date) ===" >> "$LOG_FILE"
-
-cd "$PROJECT_DIR"
-
-# Check if opencli is available
-if ! command -v opencli &> /dev/null; then
-    echo "Error: opencli not found" >> "$LOG_FILE"
-    exit 1
-fi
-
-echo "Scraping jobs from Boss直聘..." >> "$LOG_FILE"
-
-# Scrape jobs with corrected parameters
-SCRAPE_OUTPUT=$(opencli boss search "AI产品经理" --city "北京" --experience "1-3年" --salary "15-20K" --limit 20 --format json 2>&1)
-
-# Check if scraping was successful
-if echo "$SCRAPE_OUTPUT" | grep -q "user"; then
-    echo "Boss直聘 requires login. Please ensure you're logged in." >> "$LOG_FILE"
-    exit 1
-fi
-
-# Save raw JSON data
-echo "$SCRAPE_OUTPUT" > "$DATA_FILE"
-
-# Parse and generate jobs.js
-python3 << PYEOF >> "$LOG_FILE" 2>&1
+import subprocess
 import json
 import re
+import os
 from datetime import datetime
 
-data_file = "/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/job_data.json"
-jobs_file = "/Users/zhengrui/.newmax/workspace/job-recommendation/jobs.js"
+# 配置
+KEYWORDS = ["AI产品经理", "策略运营", "用户增长", "产品经理", "产品运营", "AI运营", "内容运营"]
+CITY_TARGETS = {"北京": 35, "杭州": 10, "深圳": 10, "上海": 10}
+MAX_TOTAL = 50
 
-try:
-    with open(data_file, 'r', encoding='utf-8') as f:
-        raw_content = f.read()
+PROJECT_DIR = "/Users/zhengrui/.newmax/workspace/job-recommendation"
+JOBS_FILE = os.path.join(PROJECT_DIR, "jobs.js")
+LOG_FILE = os.path.join(PROJECT_DIR, "scripts", "job-scrape.log")
 
-    # Extract JSON part (remove any trailing text like "Update available...")
-    json_match = re.search(r'\[\s*\{.*\}\s*\]', raw_content, re.DOTALL)
-    if json_match:
-        jobs = json.loads(json_match.group())
+def log(msg):
+    with open(LOG_FILE, 'a', encoding='utf-8') as f:
+        f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} - {msg}\n")
+    print(msg)
 
-        # Generate jobs.js
-        with open(jobs_file, 'w', encoding='utf-8') as f:
-            f.write(f"// 职位数据 - 由脚本自动生成\n")
-            f.write(f"// 最后更新: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
-            f.write(f"const scrapedJobs = {json.dumps(jobs, ensure_ascii=False, indent=2)};\n")
-            f.write(f"\nconst lastUpdated = \"{datetime.now().strftime('%Y-%m-%d %H:%M')}\";\n")
+def scrape_jobs(keyword, city):
+    """使用opencli抓取职位"""
+    cmd = [
+        "opencli", "boss", "search", keyword,
+        "--city", city,
+        "--experience", "1-3年",
+        "--salary", "15K以上",
+        "--limit", "20",
+        "--format", "json"
+    ]
 
-        print(f"Successfully parsed {len(jobs)} jobs")
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
+        output = result.stdout + result.stderr
+
+        # 检查是否需要登录
+        if "login" in output.lower() or "登录" in output or "auth" in output.lower():
+            log(f"需要登录: {keyword}@{city}")
+            return []
+
+        # 提取JSON数组
+        match = re.search(r'\[\s*\{.*\}\s*\]', output, re.DOTALL)
+        if match:
+            return json.loads(match.group())
+        return []
+
+    except Exception as e:
+        log(f"抓取失败 {keyword}@{city}: {e}")
+        return []
+
+def main():
+    log("=" * 50)
+    log("开始抓取Boss直聘职位数据")
+    log("=" * 50)
+
+    all_jobs = []
+    seen_keys = set()  # 去重：company+jobname
+
+    # 按城市和关键词抓取
+    for city, target in CITY_TARGETS.items():
+        if len(all_jobs) >= MAX_TOTAL:
+            break
+
+        remaining = MAX_TOTAL - len(all_jobs)
+        log(f"\n--- 抓取 {city} (目标: {target}条, 剩余: {remaining}条) ---")
+
+        for keyword in KEYWORDS:
+            if len(all_jobs) >= MAX_TOTAL:
+                break
+
+            log(f"  抓取: {keyword}@{city}")
+            jobs = scrape_jobs(keyword, city)
+            log(f"    返回 {len(jobs)} 条")
+
+            for job in jobs:
+                key = f"{job.get('company', '')}-{job.get('name', '')}"
+                if key not in seen_keys and key != '-':
+                    seen_keys.add(key)
+                    all_jobs.append(job)
+                    log(f"    ✓ 新增: {job.get('company', '')} - {job.get('name', '')}")
+
+                    if len(all_jobs) >= MAX_TOTAL:
+                        break
+
+    log(f"\n共抓取到 {len(all_jobs)} 条职位（去重后）")
+
+    # 生成jobs.js
+    with open(JOBS_FILE, 'w', encoding='utf-8') as f:
+        f.write(f"// 职位数据 - 由脚本自动生成\n")
+        f.write(f"// 最后更新: {datetime.now().strftime('%Y-%m-%d %H:%M')}\n")
+        f.write(f"const scrapedJobs = {json.dumps(all_jobs, ensure_ascii=False, indent=2)};\n")
+        f.write(f"\nconst lastUpdated = \"{datetime.now().strftime('%Y-%m-%d %H:%M')}\";\n")
+
+    log(f"已保存到 {JOBS_FILE}")
+
+    # 自动提交到GitHub
+    os.chdir(PROJECT_DIR)
+    log("\n提交到GitHub...")
+
+    subprocess.run(["git", "add", "-A"], capture_output=True)
+    subprocess.run(["git", "commit", "-m", f"Job data update: {datetime.now().strftime('%Y-%m-%d %H:%M')}"], capture_output=True)
+    result = subprocess.run(["git", "push", "origin", "main"], capture_output=True, text=True)
+
+    if result.returncode == 0:
+        log("✓ GitHub推送成功")
     else:
-        print("No valid JSON found in output")
-except Exception as e:
-    print(f"Error: {e}")
-PYEOF
+        log(f"✗ GitHub推送失败: {result.stderr}")
 
-# Commit and push changes
-git add -A >> "$LOG_FILE" 2>&1
-git commit -m "Daily job data update: $(date '+%Y-%m-%d %H:%M')" >> "$LOG_FILE" 2>&1 || true
-git push origin main >> "$LOG_FILE" 2>&1 || true
+    log("=" * 50)
+    log("抓取完成!")
+    log("=" * 50)
 
-echo "=== Job Scrape Completed: $(date) ===" >> "$LOG_FILE"
-echo "Done! $JOBS_FILE generated and pushed to GitHub."
+if __name__ == "__main__":
+    main()
