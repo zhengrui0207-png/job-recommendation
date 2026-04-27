@@ -230,6 +230,47 @@
         let currentTargetJob = '';
         let editedResume = null;
         let hasUnsavedChanges = false;
+        let fallbackLoadAttempted = false;
+
+        function getCurrentJobs() {
+            if (Array.isArray(window.scrapedJobsFallback) && window.scrapedJobsFallback.length > 0) {
+                return window.scrapedJobsFallback;
+            }
+            if (typeof scrapedJobs !== 'undefined' && Array.isArray(scrapedJobs)) {
+                return scrapedJobs;
+            }
+            return [];
+        }
+
+        function getCurrentLastUpdated() {
+            if (window.lastUpdatedFallback) return window.lastUpdatedFallback;
+            if (typeof lastUpdated !== 'undefined' && lastUpdated) return lastUpdated;
+            return new Date().toLocaleString('zh-CN');
+        }
+
+        async function loadJobsFallback() {
+            if (fallbackLoadAttempted) return;
+            fallbackLoadAttempted = true;
+
+            try {
+                const response = await fetch('scripts/job_data.json', { cache: 'no-store' });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const text = await response.text();
+                const match = text.match(/\[\s*\{[\s\S]*\}\s*\]/);
+                if (!match) throw new Error('未找到职位 JSON 数组');
+
+                window.scrapedJobsFallback = JSON.parse(match[0]);
+                window.lastUpdatedFallback = '备份职位数据';
+                renderJobs();
+            } catch (error) {
+                console.error('加载备份职位数据失败:', error);
+                const container = document.getElementById('jobListContainer');
+                if (container) {
+                    container.innerHTML = '<div class="job-loading">暂无可用职位数据</div>';
+                }
+            }
+        }
 
         function loadSavedResume() {
             const saved = localStorage.getItem('editedResume_' + currentTargetJob);
@@ -245,14 +286,16 @@
         function renderJobs() {
             const container = document.getElementById('jobListContainer');
             if (!container) return;
+            const currentJobs = getCurrentJobs();
 
-            if (typeof scrapedJobs === 'undefined' || !scrapedJobs || scrapedJobs.length === 0) {
-                container.innerHTML = '<div class="job-loading">暂无可用职位数据</div>';
+            if (!currentJobs || currentJobs.length === 0) {
+                container.innerHTML = '<div class="job-loading">正在尝试恢复职位数据...</div>';
+                loadJobsFallback();
                 return;
             }
 
             // 按匹配分数排序
-            const sortedJobs = [...scrapedJobs].map((job, index) => ({
+            const sortedJobs = [...currentJobs].map((job, index) => ({
                 ...job,
                 _score: calculateMatchScore(job),
                 _originalIndex: index
@@ -315,7 +358,7 @@
                 html += `<div class="filter-info">🚫 已过滤 ${excludedJobs.length} 个不符合条件的职位（实习/应届/经验要求过高/博士学历）</div>`;
             }
 
-            const updateTime = typeof lastUpdated !== 'undefined' ? lastUpdated : new Date().toLocaleString('zh-CN');
+            const updateTime = getCurrentLastUpdated();
             html += `<div class="job-updated">📅 数据更新时间：${updateTime} | 共 ${filteredCount} 个优质职位</div>`;
             container.innerHTML = html;
             document.getElementById('updateTime').textContent = updateTime;
@@ -348,6 +391,7 @@
         // 选择岗位
         function selectJob(index) {
             currentTargetJob = index.toString();
+            const currentJobs = getCurrentJobs();
             // 更新下拉框
             document.getElementById('targetJob').value = index.toString();
             // 更新按钮选中状态
@@ -358,7 +402,7 @@
                 }
             });
             // 更新AI建议
-            const job = scrapedJobs[parseInt(index)];
+            const job = currentJobs[parseInt(index)];
             const tips = generateOptimizationTips(job);
             const tipsList = document.getElementById('tipsList');
             tipsList.innerHTML = tips.map(t => `<li>${t}</li>`).join('');
@@ -563,7 +607,7 @@
 
         function getJobBasedTips() {
             if (!currentTargetJob) return [];
-            const job = scrapedJobs[parseInt(currentTargetJob)];
+            const job = getCurrentJobs()[parseInt(currentTargetJob)];
             return generateOptimizationTips(job);
         }
 
@@ -590,7 +634,8 @@
 
         function renderResumeEditor() {
             const jobTips = getJobBasedTips();
-            const selectedJob = currentTargetJob ? scrapedJobs[parseInt(currentTargetJob)] : null;
+            const currentJobs = getCurrentJobs();
+            const selectedJob = currentTargetJob ? currentJobs[parseInt(currentTargetJob)] : null;
             const editor = document.getElementById('resumeEditor');
             const savedResume = loadSavedResume();
             editedResume = savedResume ? JSON.parse(JSON.stringify(savedResume)) : JSON.parse(JSON.stringify(resumeData));
