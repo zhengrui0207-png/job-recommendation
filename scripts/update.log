@@ -76,3 +76,14 @@ Changes pushed to GitHub
 === Job Update Started: Sun Apr 26 18:09:51 CST 2026 ===
 Searching jobs on Boss...
 /Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
+[main 9b66eff] Update job listings: 2026-04-26 18:09
+ 2 files changed, 13 insertions(+)
+To github.com:zhengrui0207-png/job-recommendation.git
+   d861dd6..9b66eff  main -> main
+Changes pushed to GitHub
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 31: vercel: command not found
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 31: vercel: command not found
+=== Job Update Completed: Sun Apr 26 18:09:55 CST 2026 ===
+=== Job Update Started: Mon Apr 27 18:21:38 CST 2026 ===
+Searching jobs on Boss...
+/Users/zhengrui/.newmax/workspace/job-recommendation/scripts/update-jobs.sh: line 17: opencli: command not found
