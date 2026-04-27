@@ -316,7 +316,7 @@ def fetch_job_detail(job):
     if not security_id:
         return {}
 
-    cmd = ["opencli", "boss", "detail", security_id, "--format", "json"]
+    cmd = ["opencli", "boss", "detail", "--format", "json", "--", security_id]
     returncode, output, raw_output_file, issue = run_opencli(
         cmd, f"detail-{security_id[:18]}", DETAIL_TIMEOUT
     )
